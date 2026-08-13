@@ -24,17 +24,40 @@
 
 namespace local_kopere_trail\output;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the report page implementation.
+ */
 class report_page implements \renderable, \templatable {
+    /**
+     * Trail.
+     *
+     * @var \stdClass
+     */
     private \stdClass $trail;
+    /**
+     * Rows.
+     *
+     * @var array
+     */
     private array $rows;
 
+    /**
+     * Creates a new instance.
+     *
+     * @param \stdClass $trail The trail.
+     * @param array $rows The rows.
+     */
     public function __construct(\stdClass $trail, array $rows) {
         $this->trail = $trail;
         $this->rows = $rows;
     }
 
+    /**
+     * Exports data for a Mustache template.
+     *
+     * @param \renderer_base $output The output.
+     * @return array The result.
+     */
     public function export_for_template(\renderer_base $output): array {
         $items = [];
         foreach ($this->rows as $row) {
@@ -60,4 +83,3 @@ class report_page implements \renderable, \templatable {
         ];
     }
 }
-

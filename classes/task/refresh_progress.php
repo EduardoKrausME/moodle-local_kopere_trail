@@ -24,13 +24,24 @@
 
 namespace local_kopere_trail\task;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the refresh progress implementation.
+ */
 class refresh_progress extends \core\task\scheduled_task {
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
     public function get_name(): string {
         return get_string('task_refresh_progress', 'local_kopere_trail');
     }
 
+    /**
+     * Executes the external function.
+     *
+     * @return void The result.
+     */
     public function execute(): void {
         (new \local_kopere_trail\service\progress_service())->refresh_active_progress();
     }

@@ -24,9 +24,17 @@
 
 namespace local_kopere_trail;
 
-defined('MOODLE_INTERNAL') || die();
-
-class enrolment_service_test extends \advanced_testcase {
+/**
+ * Provides the enrolment service test implementation.
+ *
+ * @coversNothing
+ */
+final class enrolment_service_test extends \advanced_testcase {
+    /**
+     * Handles test multiple assignment sources keep enrolment until last source disappears.
+     *
+     * @return void The result.
+     */
     public function test_multiple_assignment_sources_keep_enrolment_until_last_source_disappears(): void {
         global $DB, $CFG;
         $this->resetAfterTest();
@@ -84,6 +92,11 @@ class enrolment_service_test extends \advanced_testcase {
         ]));
     }
 
+    /**
+     * Handles test access service honours visibility and dates.
+     *
+     * @return void The result.
+     */
     public function test_access_service_honours_visibility_and_dates(): void {
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();

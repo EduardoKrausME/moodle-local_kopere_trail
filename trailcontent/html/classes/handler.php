@@ -24,17 +24,36 @@
 
 namespace trailcontent_html;
 
-defined('MOODLE_INTERNAL') || die();
-
-class handler implements \local_kopere_trail\contract\content_provider, \local_kopere_trail\contract\configurable_provider {
+/**
+ * Provides the handler implementation.
+ */
+class handler implements \local_kopere_trail\contract\configurable_provider, \local_kopere_trail\contract\content_provider {
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
     public function get_name(): string {
         return get_string('pluginname', 'trailcontent_html');
     }
 
+    /**
+     * Returns the icon.
+     *
+     * @return string The result.
+     */
     public function get_icon(): string {
         return 'i/marker';
     }
 
+    /**
+     * Handles add configuration fields.
+     *
+     * @param \MoodleQuickForm $mform The mform.
+     * @param string $selectorfield The selectorfield.
+     * @param \stdClass|null $currentdata The currentdata.
+     * @return void The result.
+     */
     public function add_configuration_fields(\MoodleQuickForm $mform, string $selectorfield, ?\stdClass $currentdata = null): void {
         $mform->addElement('editor', 'contenthtml', get_string('contenthtml', 'local_kopere_trail'), null, [
             'maxfiles' => 0,
@@ -45,6 +64,13 @@ class handler implements \local_kopere_trail\contract\content_provider, \local_k
         $mform->hideIf('contenthtml', $selectorfield, 'neq', 'html');
     }
 
+    /**
+     * Prepares the configuration.
+     *
+     * @param \stdClass $data The data.
+     * @param array $config The config.
+     * @return \stdClass The result.
+     */
     public function prepare_configuration(\stdClass $data, array $config): \stdClass {
         $data->contenthtml = [
             'text' => (string)($config['html'] ?? ''),
@@ -53,6 +79,12 @@ class handler implements \local_kopere_trail\contract\content_provider, \local_k
         return $data;
     }
 
+    /**
+     * Builds the configuration.
+     *
+     * @param \stdClass $data The data.
+     * @return array The result.
+     */
     public function build_configuration(\stdClass $data): array {
         $value = $data->contenthtml ?? [];
         return [
@@ -61,6 +93,12 @@ class handler implements \local_kopere_trail\contract\content_provider, \local_k
         ];
     }
 
+    /**
+     * Validates the configuration.
+     *
+     * @param array $data The data.
+     * @return array The result.
+     */
     public function validate_configuration(array $data): array {
         $value = $data['contenthtml'] ?? [];
         return trim((string)($value['text'] ?? '')) === ''
@@ -68,13 +106,34 @@ class handler implements \local_kopere_trail\contract\content_provider, \local_k
             : [];
     }
 
+    /**
+     * Returns the launch url.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return \moodle_url|null The result.
+     */
     public function get_launch_url(\stdClass $step, int $userid): ?\moodle_url {
         return null;
     }
 
+    /**
+     * Handles ensure access.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return void The result.
+     */
     public function ensure_access(\stdClass $step, int $userid): void {
     }
 
+    /**
+     * Exports the view data.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return array The result.
+     */
     public function export_view_data(\stdClass $step, int $userid): array {
         $config = \local_kopere_trail\json::decode($step->contentconfig);
         $html = (string)($config['html'] ?? '');

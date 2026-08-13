@@ -24,11 +24,27 @@
 
 namespace trailpersonalization_rules;
 
-defined('MOODLE_INTERNAL') || die();
+/**
+ * Provides the handler implementation.
+ */
+class handler implements \local_kopere_trail\contract\configurable_provider, \local_kopere_trail\contract\personalization_provider {
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
+    public function get_name(): string {
+        return get_string('pluginname', 'trailpersonalization_rules');
+    }
 
-class handler implements \local_kopere_trail\contract\personalization_provider, \local_kopere_trail\contract\configurable_provider {
-    public function get_name(): string { return get_string('pluginname', 'trailpersonalization_rules'); }
-
+    /**
+     * Handles add configuration fields.
+     *
+     * @param \MoodleQuickForm $mform The mform.
+     * @param string $selectorfield The selectorfield.
+     * @param \stdClass|null $currentdata The currentdata.
+     * @return void The result.
+     */
     public function add_configuration_fields(\MoodleQuickForm $mform, string $selectorfield, ?\stdClass $currentdata = null): void {
         $selected = (array)($currentdata->personalizationcohortids ?? []);
         $mform->addElement('autocomplete', 'personalizationcohortids', get_string('personalizationcohortids', 'local_kopere_trail'),
@@ -41,14 +57,33 @@ class handler implements \local_kopere_trail\contract\personalization_provider, 
         $mform->addHelpButton('personalizationcohortids', 'personalizationcohortids', 'local_kopere_trail');
     }
 
+    /**
+     * Prepares the configuration.
+     *
+     * @param \stdClass $data The data.
+     * @param array $config The config.
+     * @return \stdClass The result.
+     */
     public function prepare_configuration(\stdClass $data, array $config): \stdClass {
         $data->personalizationcohortids = array_values(array_filter(array_map('intval', $config['cohortids'] ?? [])));
         return $data;
     }
+    /**
+     * Builds the configuration.
+     *
+     * @param \stdClass $data The data.
+     * @return array The result.
+     */
     public function build_configuration(\stdClass $data): array {
         $cohortids = array_values(array_unique(array_filter(array_map('intval', (array)($data->personalizationcohortids ?? [])))));
         return $cohortids ? ['cohortids' => $cohortids] : [];
     }
+    /**
+     * Validates the configuration.
+     *
+     * @param array $data The data.
+     * @return array The result.
+     */
     public function validate_configuration(array $data): array {
         global $DB;
         foreach (array_filter(array_map('intval', (array)($data['personalizationcohortids'] ?? []))) as $cohortid) {
@@ -59,11 +94,20 @@ class handler implements \local_kopere_trail\contract\personalization_provider, 
         return [];
     }
 
+    /**
+     * Handles should show step.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return bool The result.
+     */
     public function should_show_step(\stdClass $step, int $userid): bool {
         global $DB;
         $config = \local_kopere_trail\json::decode($step->personalizationconfig);
         $cohortids = array_filter(array_map('intval', $config['cohortids'] ?? []));
-        if (!$cohortids) { return true; }
+        if (!$cohortids) {
+            return true;
+        }
         [$insql, $params] = $DB->get_in_or_equal($cohortids, SQL_PARAMS_NAMED, 'cohortid');
         $params['userid'] = $userid;
         return $DB->record_exists_select('cohort_members', "userid = :userid AND cohortid {$insql}", $params);

@@ -24,16 +24,57 @@
 
 namespace local_kopere_trail\output;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the view page implementation.
+ */
 class view_page implements \renderable, \templatable {
+    /**
+     * Trail.
+     *
+     * @var \stdClass
+     */
     private \stdClass $trail;
+    /**
+     * Progress.
+     *
+     * @var \stdClass
+     */
     private \stdClass $progress;
+    /**
+     * Steps.
+     *
+     * @var array
+     */
     private array $steps;
+    /**
+     * Canmanage.
+     *
+     * @var bool
+     */
     private bool $canmanage;
+    /**
+     * Certificateurl.
+     *
+     * @var \moodle_url|null
+     */
     private ?\moodle_url $certificateurl;
 
-    public function __construct(\stdClass $trail, \stdClass $progress, array $steps, bool $canmanage, ?\moodle_url $certificateurl = null) {
+    /**
+     * Creates a new instance.
+     *
+     * @param \stdClass $trail The trail.
+     * @param \stdClass $progress The progress.
+     * @param array $steps The steps.
+     * @param bool $canmanage The canmanage.
+     * @param \moodle_url|null $certificateurl The certificateurl.
+     */
+    public function __construct(
+        \stdClass $trail,
+        \stdClass $progress,
+        array $steps,
+        bool $canmanage,
+        ?\moodle_url $certificateurl = null
+    ) {
         $this->trail = $trail;
         $this->progress = $progress;
         $this->steps = $steps;
@@ -41,12 +82,19 @@ class view_page implements \renderable, \templatable {
         $this->certificateurl = $certificateurl;
     }
 
+    /**
+     * Exports data for a Mustache template.
+     *
+     * @param \renderer_base $output The output.
+     * @return array The result.
+     */
     public function export_for_template(\renderer_base $output): array {
         $percent = round((float)$this->progress->percent);
         $context = \context_system::instance();
         $trailconfig = \local_kopere_trail\json::decode($this->trail->config ?? null);
         $gamificationtype = (string)($trailconfig['gamificationtype'] ?? 'progress');
-        $hasgamification = (new \local_kopere_trail\service\subplugin_manager())->get_gamification_handler($gamificationtype) !== null;
+        $plugins = new \local_kopere_trail\service\subplugin_manager();
+        $hasgamification = $plugins->get_gamification_handler($gamificationtype) !== null;
         $summary = file_rewrite_pluginfile_urls(
             (string)$this->trail->summary,
             'pluginfile.php',

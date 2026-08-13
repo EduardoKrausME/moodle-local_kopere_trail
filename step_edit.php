@@ -47,7 +47,15 @@ if ($id) {
         throw new moodle_exception('invalidsteptrail', 'local_kopere_trail');
     }
     $step = $configuration->prepare_step_for_form($step);
-    $step = file_prepare_standard_editor($step, 'description', $editoroptions, $context, 'local_kopere_trail', 'stepdescription', $id);
+    $step = file_prepare_standard_editor(
+        $step,
+        'description',
+        $editoroptions,
+        $context,
+        'local_kopere_trail',
+        'stepdescription',
+        $id
+    );
 }
 $form = new \local_kopere_trail\form\step_form($url, ['currentdata' => $step]);
 
@@ -61,9 +69,20 @@ if ($data = $form->get_data()) {
         $id = $repository->save_step($data);
     }
     $data->id = $id;
-    $data = file_postupdate_standard_editor($data, 'description', $editoroptions, $context, 'local_kopere_trail', 'stepdescription', $id);
+    $data = file_postupdate_standard_editor(
+        $data,
+        'description',
+        $editoroptions,
+        $context,
+        'local_kopere_trail',
+        'stepdescription',
+        $id
+    );
     $repository->save_step($data);
-    redirect(new moodle_url('/local/kopere_trail/steps.php', ['trailid' => $trailid]), get_string($step ? 'stepupdated' : 'stepcreated', 'local_kopere_trail'));
+    redirect(
+        new moodle_url('/local/kopere_trail/steps.php', ['trailid' => $trailid]),
+        get_string($step ? 'stepupdated' : 'stepcreated', 'local_kopere_trail')
+    );
 }
 if ($step) {
     $form->set_data($step);

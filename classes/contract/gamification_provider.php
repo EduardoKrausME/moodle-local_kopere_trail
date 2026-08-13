@@ -24,11 +24,24 @@
 
 namespace local_kopere_trail\contract;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Defines the gamification provider contract.
+ */
 interface gamification_provider {
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
     public function get_name(): string;
 
+    /**
+     * Handles calculate xp.
+     *
+     * @param array $steps The steps.
+     * @param array $stepstates The stepstates.
+     * @param int $userid The userid.
+     * @return int The result.
+     */
     public function calculate_xp(array $steps, array $stepstates, int $userid): int;
 }
-

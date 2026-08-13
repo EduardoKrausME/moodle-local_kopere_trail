@@ -30,4 +30,3 @@ $plugin->requires = 2024100700;
 $plugin->dependencies = [
     'local_kopere_trail' => 2026081204,
 ];
-

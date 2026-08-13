@@ -57,7 +57,10 @@ if ($data = $form->get_data()) {
     $data->id = $id;
     $data = file_postupdate_standard_editor($data, 'summary', $editoroptions, $context, 'local_kopere_trail', 'summary', $id);
     $repository->save_trail($data);
-    redirect(new moodle_url('/local/kopere_trail/manage.php'), get_string($trail ? 'trailupdated' : 'trailcreated', 'local_kopere_trail'));
+    redirect(
+        new moodle_url('/local/kopere_trail/manage.php'),
+        get_string($trail ? 'trailupdated' : 'trailcreated', 'local_kopere_trail')
+    );
 }
 if ($trail) {
     $form->set_data($trail);

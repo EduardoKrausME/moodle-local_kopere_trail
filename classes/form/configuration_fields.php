@@ -24,9 +24,16 @@
 
 namespace local_kopere_trail\form;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the configuration fields implementation.
+ */
 class configuration_fields {
+    /**
+     * Returns the course options.
+     *
+     * @param int $selectedid The selectedid.
+     * @return array The result.
+     */
     public static function get_course_options(int $selectedid = 0): array {
         global $DB;
         if ($selectedid <= 0) {
@@ -43,6 +50,12 @@ class configuration_fields {
         return [(int)$course->id => $label];
     }
 
+    /**
+     * Returns the activity options.
+     *
+     * @param int $selectedid The selectedid.
+     * @return array The result.
+     */
     public static function get_activity_options(int $selectedid = 0): array {
         if ($selectedid <= 0) {
             return [];
@@ -56,6 +69,12 @@ class configuration_fields {
         return [$selectedid => format_string($modinfo->get_course()->fullname) . ' / ' . format_string($cminfo->name)];
     }
 
+    /**
+     * Returns the cohort options.
+     *
+     * @param array $selectedids The selectedids.
+     * @return array The result.
+     */
     public static function get_cohort_options(array $selectedids = []): array {
         global $DB;
         $selectedids = array_values(array_unique(array_filter(array_map('intval', $selectedids))));
@@ -74,6 +93,12 @@ class configuration_fields {
         return $options;
     }
 
+    /**
+     * Returns the grade item options.
+     *
+     * @param int $selectedid The selectedid.
+     * @return array The result.
+     */
     public static function get_grade_item_options(int $selectedid = 0): array {
         global $DB;
         if ($selectedid <= 0) {
@@ -90,6 +115,12 @@ class configuration_fields {
         return [(int)$item->id => self::grade_item_label($item)];
     }
 
+    /**
+     * Returns the competency options.
+     *
+     * @param array $selectedids The selectedids.
+     * @return array The result.
+     */
     public static function get_competency_options(array $selectedids = []): array {
         global $DB;
         $selectedids = array_values(array_unique(array_filter(array_map('intval', $selectedids))));
@@ -108,6 +139,12 @@ class configuration_fields {
         return $options;
     }
 
+    /**
+     * Handles grade item label.
+     *
+     * @param \stdClass $item The item.
+     * @return string The result.
+     */
     public static function grade_item_label(\stdClass $item): string {
         $itemname = trim((string)$item->itemname);
         if ($itemname === '') {

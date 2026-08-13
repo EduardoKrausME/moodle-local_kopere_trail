@@ -24,21 +24,36 @@
 
 namespace local_kopere_trail\event;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the step completed implementation.
+ */
 class step_completed extends \core\event\base {
+    /**
+     * Initialises the component.
+     *
+     * @return void The result.
+     */
     protected function init(): void {
         $this->data['objecttable'] = 'local_kopere_trail_step';
         $this->data['crud'] = 'u';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
     }
 
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
     public static function get_name(): string {
         return get_string('event_step_completed', 'local_kopere_trail');
     }
 
+    /**
+     * Returns the event description.
+     *
+     * @return string The result.
+     */
     public function get_description(): string {
         return "The user with id '{$this->userid}' completed the trail step with id '{$this->objectid}'.";
     }
 }
-

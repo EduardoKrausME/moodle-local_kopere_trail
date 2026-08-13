@@ -24,11 +24,27 @@
 
 namespace trailcompetency_moodlecompetency;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the handler implementation.
+ */
 class handler implements \local_kopere_trail\contract\competency_provider, \local_kopere_trail\contract\configurable_provider {
-    public function get_name(): string { return get_string('pluginname', 'trailcompetency_moodlecompetency'); }
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
+    public function get_name(): string {
+        return get_string('pluginname', 'trailcompetency_moodlecompetency');
+    }
 
+    /**
+     * Handles add configuration fields.
+     *
+     * @param \MoodleQuickForm $mform The mform.
+     * @param string $selectorfield The selectorfield.
+     * @param \stdClass|null $currentdata The currentdata.
+     * @return void The result.
+     */
     public function add_configuration_fields(\MoodleQuickForm $mform, string $selectorfield, ?\stdClass $currentdata = null): void {
         $selected = (array)($currentdata->competencyids ?? []);
         $mform->addElement('autocomplete', 'competencyids', get_string('competencyids', 'local_kopere_trail'),
@@ -40,14 +56,33 @@ class handler implements \local_kopere_trail\contract\competency_provider, \loca
         $mform->hideIf('competencyids', $selectorfield, 'neq', 'moodlecompetency');
     }
 
+    /**
+     * Prepares the configuration.
+     *
+     * @param \stdClass $data The data.
+     * @param array $config The config.
+     * @return \stdClass The result.
+     */
     public function prepare_configuration(\stdClass $data, array $config): \stdClass {
         $data->competencyids = array_values(array_filter(array_map('intval', $config['competencyids'] ?? [])));
         return $data;
     }
+    /**
+     * Builds the configuration.
+     *
+     * @param \stdClass $data The data.
+     * @return array The result.
+     */
     public function build_configuration(\stdClass $data): array {
         $ids = array_values(array_unique(array_filter(array_map('intval', (array)($data->competencyids ?? [])))));
         return $ids ? ['competencyids' => $ids] : [];
     }
+    /**
+     * Validates the configuration.
+     *
+     * @param array $data The data.
+     * @return array The result.
+     */
     public function validate_configuration(array $data): array {
         global $DB;
         foreach (array_filter(array_map('intval', (array)($data['competencyids'] ?? []))) as $competencyid) {
@@ -58,11 +93,20 @@ class handler implements \local_kopere_trail\contract\competency_provider, \loca
         return [];
     }
 
+    /**
+     * Exports the competency data.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return array The result.
+     */
     public function export_competency_data(\stdClass $step, int $userid): array {
         global $DB;
         $config = \local_kopere_trail\json::decode($step->competencyconfig ?? null);
         $ids = array_values(array_filter(array_map('intval', $config['competencyids'] ?? [])));
-        if (!$ids) { return []; }
+        if (!$ids) {
+            return [];
+        }
         $records = $DB->get_records_list('competency', 'id', $ids, 'shortname ASC', 'id, shortname, idnumber');
         $items = [];
         foreach ($records as $record) {

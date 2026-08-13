@@ -24,21 +24,62 @@
 
 namespace local_kopere_trail\output;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the enrol page implementation.
+ */
 class enrol_page implements \renderable, \templatable {
+    /**
+     * Trail.
+     *
+     * @var \stdClass
+     */
     private \stdClass $trail;
+    /**
+     * Assignments.
+     *
+     * @var array
+     */
     private array $assignments;
-    public function __construct(\stdClass $trail, array $assignments) { $this->trail = $trail; $this->assignments = $assignments; }
+    /**
+     * Creates a new instance.
+     *
+     * @param \stdClass $trail The trail.
+     * @param array $assignments The assignments.
+     */
+    public function __construct(\stdClass $trail, array $assignments) {
+        $this->trail = $trail;
+        $this->assignments = $assignments;
+    }
+    /**
+     * Exports data for a Mustache template.
+     *
+     * @param \renderer_base $output The output.
+     * @return array The result.
+     */
     public function export_for_template(\renderer_base $output): array {
         global $DB;
         $userids = $cohortids = [];
         foreach ($this->assignments as $assignment) {
-            if ($assignment->assigntype === 'user') { $userids[] = (int)$assignment->instanceid; }
-            else if ($assignment->assigntype === 'cohort') { $cohortids[] = (int)$assignment->instanceid; }
+            if ($assignment->assigntype === 'user') {
+                $userids[] = (int)$assignment->instanceid;
+            } else if ($assignment->assigntype === 'cohort') {
+                $cohortids[] = (int)$assignment->instanceid;
+            }
         }
-        $users = $userids ? $DB->get_records_list('user', 'id', array_values(array_unique($userids)), '', 'id, firstname, lastname, firstnamephonetic, lastnamephonetic, middlename, alternatename, email') : [];
-        $cohorts = $cohortids ? $DB->get_records_list('cohort', 'id', array_values(array_unique($cohortids)), '', 'id, name, idnumber') : [];
+        $users = $userids ? $DB->get_records_list(
+            'user',
+            'id',
+            array_values(array_unique($userids)),
+            '',
+            'id, firstname, lastname, firstnamephonetic, lastnamephonetic, middlename, alternatename, email'
+        ) : [];
+        $cohorts = $cohortids ? $DB->get_records_list(
+            'cohort',
+            'id',
+            array_values(array_unique($cohortids)),
+            '',
+            'id, name, idnumber'
+        ) : [];
         $items = [];
         foreach ($this->assignments as $assignment) {
             if ($assignment->assigntype === 'user') {
@@ -52,7 +93,9 @@ class enrol_page implements \renderable, \templatable {
                 if (isset($cohorts[$assignment->instanceid])) {
                     $cohort = $cohorts[$assignment->instanceid];
                     $targetname = format_string($cohort->name);
-                    if (trim((string)$cohort->idnumber) !== '') { $targetname .= ' [' . format_string($cohort->idnumber) . ']'; }
+                    if (trim((string)$cohort->idnumber) !== '') {
+                        $targetname .= ' [' . format_string($cohort->idnumber) . ']';
+                    }
                 }
             }
             $items[] = [

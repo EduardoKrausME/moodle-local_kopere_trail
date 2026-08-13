@@ -24,8 +24,6 @@
 
 namespace local_kopere_trail\plugininfo;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Plugin information for the trailprereq subplugin type.
  */

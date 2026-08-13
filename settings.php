@@ -32,4 +32,3 @@ if ($hassiteconfig) {
         'local/kopere_trail:manage'
     ));
 }
-

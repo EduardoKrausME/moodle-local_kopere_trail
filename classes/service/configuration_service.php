@@ -24,15 +24,32 @@
 
 namespace local_kopere_trail\service;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the configuration service implementation.
+ */
 class configuration_service {
+    /**
+     * Plugins.
+     *
+     * @var subplugin_manager
+     */
     private subplugin_manager $plugins;
 
+    /**
+     * Creates a new instance.
+     *
+     * @param subplugin_manager|null $plugins The plugins.
+     */
     public function __construct(?subplugin_manager $plugins = null) {
         $this->plugins = $plugins ?? new subplugin_manager();
     }
 
+    /**
+     * Prepares the trail for form.
+     *
+     * @param \stdClass $trail The trail.
+     * @return \stdClass The result.
+     */
     public function prepare_trail_for_form(\stdClass $trail): \stdClass {
         $config = \local_kopere_trail\json::decode($trail->config ?? null);
         $trail->certtype = (string)($config['certtype'] ?? '');
@@ -45,6 +62,12 @@ class configuration_service {
         );
     }
 
+    /**
+     * Builds the trail config.
+     *
+     * @param \stdClass $data The data.
+     * @return \stdClass The result.
+     */
     public function build_trail_config(\stdClass $data): \stdClass {
         $certtype = (string)($data->certtype ?? '');
         $config = $this->build_provider_configuration(subplugin_manager::TYPE_CERT, $certtype, $data);
@@ -59,6 +82,12 @@ class configuration_service {
         return $data;
     }
 
+    /**
+     * Prepares the step for form.
+     *
+     * @param \stdClass $step The step.
+     * @return \stdClass The result.
+     */
     public function prepare_step_for_form(\stdClass $step): \stdClass {
         $step = $this->prepare_provider_configuration(
             subplugin_manager::TYPE_CONTENT,
@@ -87,11 +116,29 @@ class configuration_service {
         return $step;
     }
 
+    /**
+     * Builds the step configs.
+     *
+     * @param \stdClass $data The data.
+     * @return \stdClass The result.
+     */
     public function build_step_configs(\stdClass $data): \stdClass {
         $contentconfig = $this->build_provider_configuration(subplugin_manager::TYPE_CONTENT, (string)$data->contenttype, $data);
-        $completionconfig = $this->build_provider_configuration(subplugin_manager::TYPE_COMPLETION, (string)$data->completiontype, $data);
-        $personalizationconfig = $this->build_provider_configuration(subplugin_manager::TYPE_PERSONALIZATION, (string)($data->personalizationtype ?? ''), $data);
-        $competencyconfig = $this->build_provider_configuration(subplugin_manager::TYPE_COMPETENCY, (string)($data->competencytype ?? ''), $data);
+        $completionconfig = $this->build_provider_configuration(
+            subplugin_manager::TYPE_COMPLETION,
+            (string)$data->completiontype,
+            $data
+        );
+        $personalizationconfig = $this->build_provider_configuration(
+            subplugin_manager::TYPE_PERSONALIZATION,
+            (string)($data->personalizationtype ?? ''),
+            $data
+        );
+        $competencyconfig = $this->build_provider_configuration(
+            subplugin_manager::TYPE_COMPETENCY,
+            (string)($data->competencytype ?? ''),
+            $data
+        );
 
         $data->contentconfig = $contentconfig ? \local_kopere_trail\json::encode($contentconfig) : null;
         $data->completionconfig = $completionconfig ? \local_kopere_trail\json::encode($completionconfig) : null;
@@ -102,6 +149,12 @@ class configuration_service {
         return $data;
     }
 
+    /**
+     * Prepares the edge for form.
+     *
+     * @param \stdClass $edge The edge.
+     * @return \stdClass The result.
+     */
     public function prepare_edge_for_form(\stdClass $edge): \stdClass {
         return $this->prepare_provider_configuration(
             subplugin_manager::TYPE_PREREQ,
@@ -111,13 +164,33 @@ class configuration_service {
         );
     }
 
+    /**
+     * Builds the edge config.
+     *
+     * @param \stdClass $data The data.
+     * @return \stdClass The result.
+     */
     public function build_edge_config(\stdClass $data): \stdClass {
         $config = $this->build_provider_configuration(subplugin_manager::TYPE_PREREQ, (string)$data->ruleplugin, $data);
         $data->ruleconfig = $config ? \local_kopere_trail\json::encode($config) : null;
         return $data;
     }
 
-    public function add_provider_fields(\MoodleQuickForm $mform, string $type, string $selectorfield, ?\stdClass $currentdata = null): void {
+    /**
+     * Handles add provider fields.
+     *
+     * @param \MoodleQuickForm $mform The mform.
+     * @param string $type The type.
+     * @param string $selectorfield The selectorfield.
+     * @param \stdClass|null $currentdata The currentdata.
+     * @return void The result.
+     */
+    public function add_provider_fields(
+        \MoodleQuickForm $mform,
+        string $type,
+        string $selectorfield,
+        ?\stdClass $currentdata = null
+    ): void {
         foreach (array_keys($this->plugins->get_options($type)) as $name) {
             $handler = $this->plugins->get_handler($type, $name);
             if ($handler instanceof \local_kopere_trail\contract\configurable_provider) {
@@ -126,6 +199,14 @@ class configuration_service {
         }
     }
 
+    /**
+     * Validates the provider.
+     *
+     * @param string $type The type.
+     * @param string $name The name.
+     * @param array $data The data.
+     * @return array The result.
+     */
     public function validate_provider(string $type, string $name, array $data): array {
         $handler = $this->plugins->get_handler($type, $name);
         if (!$handler instanceof \local_kopere_trail\contract\configurable_provider) {
@@ -134,6 +215,15 @@ class configuration_service {
         return $handler->validate_configuration($data);
     }
 
+    /**
+     * Prepares the provider configuration.
+     *
+     * @param string $type The type.
+     * @param string $name The name.
+     * @param \stdClass $data The data.
+     * @param array $config The config.
+     * @return \stdClass The result.
+     */
     private function prepare_provider_configuration(string $type, string $name, \stdClass $data, array $config): \stdClass {
         $handler = $this->plugins->get_handler($type, $name);
         if (!$handler instanceof \local_kopere_trail\contract\configurable_provider) {
@@ -142,6 +232,14 @@ class configuration_service {
         return $handler->prepare_configuration($data, $config);
     }
 
+    /**
+     * Builds the provider configuration.
+     *
+     * @param string $type The type.
+     * @param string $name The name.
+     * @param \stdClass $data The data.
+     * @return array The result.
+     */
     private function build_provider_configuration(string $type, string $name, \stdClass $data): array {
         $handler = $this->plugins->get_handler($type, $name);
         if (!$handler instanceof \local_kopere_trail\contract\configurable_provider) {

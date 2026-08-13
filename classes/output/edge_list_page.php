@@ -24,16 +24,51 @@
 
 namespace local_kopere_trail\output;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the edge list page implementation.
+ */
 class edge_list_page implements \renderable, \templatable {
+    /**
+     * Trail.
+     *
+     * @var \stdClass
+     */
     private \stdClass $trail;
+    /**
+     * Steps.
+     *
+     * @var array
+     */
     private array $steps;
+    /**
+     * Edges.
+     *
+     * @var array
+     */
     private array $edges;
-    public function __construct(\stdClass $trail, array $steps, array $edges) { $this->trail = $trail; $this->steps = $steps; $this->edges = $edges; }
+    /**
+     * Creates a new instance.
+     *
+     * @param \stdClass $trail The trail.
+     * @param array $steps The steps.
+     * @param array $edges The edges.
+     */
+    public function __construct(\stdClass $trail, array $steps, array $edges) {
+        $this->trail = $trail;
+        $this->steps = $steps;
+        $this->edges = $edges;
+    }
+    /**
+     * Exports data for a Mustache template.
+     *
+     * @param \renderer_base $output The output.
+     * @return array The result.
+     */
     public function export_for_template(\renderer_base $output): array {
         $stepnames = [];
-        foreach ($this->steps as $step) { $stepnames[$step->id] = format_string($step->name); }
+        foreach ($this->steps as $step) {
+            $stepnames[$step->id] = format_string($step->name);
+        }
         $items = [];
         $plugins = new \local_kopere_trail\service\subplugin_manager();
         foreach ($this->edges as $edge) {
@@ -41,8 +76,15 @@ class edge_list_page implements \renderable, \templatable {
             $items[] = [
                 'fromstep' => $stepnames[$edge->fromstepid] ?? get_string('removedstep', 'local_kopere_trail'),
                 'tostep' => $stepnames[$edge->tostepid] ?? get_string('removedstep', 'local_kopere_trail'),
-                'ruleplugin' => $plugins->get_plugin_label(\local_kopere_trail\service\subplugin_manager::TYPE_PREREQ, (string)$edge->ruleplugin),
-                'editurl' => (new \moodle_url('/local/kopere_trail/edge_edit.php', ['trailid' => $this->trail->id, 'id' => $edge->id]))->out(false),
+                'ruleplugin' => $plugins->get_plugin_label(
+                    \local_kopere_trail\service\subplugin_manager::TYPE_PREREQ,
+                    (string)$edge->ruleplugin
+                ),
+                'editurl' => (new \moodle_url(
+                    '/local/kopere_trail/edge_edit.php',
+                    ['trailid' => $this->trail->id,
+                    'id' => $edge->id]
+                ))->out(false),
                 'moveupurl' => (new \moodle_url('/local/kopere_trail/move.php', $base + ['direction' => 'up']))->out(false),
                 'movedownurl' => (new \moodle_url('/local/kopere_trail/move.php', $base + ['direction' => 'down']))->out(false),
             ];

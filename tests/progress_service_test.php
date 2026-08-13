@@ -24,9 +24,17 @@
 
 namespace local_kopere_trail;
 
-defined('MOODLE_INTERNAL') || die();
-
-class progress_service_test extends \advanced_testcase {
+/**
+ * Provides the progress service test implementation.
+ *
+ * @coversNothing
+ */
+final class progress_service_test extends \advanced_testcase {
+    /**
+     * Handles test rebuild does not create enrolment.
+     *
+     * @return void The result.
+     */
     public function test_rebuild_does_not_create_enrolment(): void {
         global $DB;
         $this->resetAfterTest();
@@ -50,6 +58,11 @@ class progress_service_test extends \advanced_testcase {
         }
     }
 
+    /**
+     * Handles test personalized removed source step does not keep destination locked.
+     *
+     * @return void The result.
+     */
     public function test_personalized_removed_source_step_does_not_keep_destination_locked(): void {
         global $DB;
         $this->resetAfterTest();
@@ -85,7 +98,8 @@ class progress_service_test extends \advanced_testcase {
             'ruleplugin' => 'step',
         ]);
 
-        $progress = (new \local_kopere_trail\service\progress_service($repository))->rebuild_user_progress($trailid, (int)$user->id);
+        $service = new \local_kopere_trail\service\progress_service($repository);
+        $progress = $service->rebuild_user_progress($trailid, (int)$user->id);
         $this->assertArrayHasKey($destination, $progress->stepstates);
         $this->assertTrue($progress->stepstates[$destination]['available']);
     }

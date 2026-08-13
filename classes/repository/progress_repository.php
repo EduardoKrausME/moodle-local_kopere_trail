@@ -24,9 +24,17 @@
 
 namespace local_kopere_trail\repository;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the progress repository implementation.
+ */
 class progress_repository {
+    /**
+     * Returns the trail progress.
+     *
+     * @param int $trailid The trailid.
+     * @param int $userid The userid.
+     * @return \stdClass|null The result.
+     */
     public function get_trail_progress(int $trailid, int $userid): ?\stdClass {
         global $DB;
 
@@ -38,6 +46,12 @@ class progress_repository {
         return $record ?: null;
     }
 
+    /**
+     * Saves the trail progress.
+     *
+     * @param \stdClass $progress The progress.
+     * @return \stdClass The result.
+     */
     public function save_trail_progress(\stdClass $progress): \stdClass {
         global $DB;
 
@@ -51,6 +65,13 @@ class progress_repository {
         return $progress;
     }
 
+    /**
+     * Returns the step progress.
+     *
+     * @param int $stepid The stepid.
+     * @param int $userid The userid.
+     * @return \stdClass|null The result.
+     */
     public function get_step_progress(int $stepid, int $userid): ?\stdClass {
         global $DB;
 
@@ -62,6 +83,13 @@ class progress_repository {
         return $record ?: null;
     }
 
+    /**
+     * Returns the step progress by trail.
+     *
+     * @param int $trailid The trailid.
+     * @param int $userid The userid.
+     * @return array The result.
+     */
     public function get_step_progress_by_trail(int $trailid, int $userid): array {
         global $DB;
 
@@ -78,6 +106,12 @@ class progress_repository {
         return $bystep;
     }
 
+    /**
+     * Saves the step progress.
+     *
+     * @param \stdClass $progress The progress.
+     * @return \stdClass The result.
+     */
     public function save_step_progress(\stdClass $progress): \stdClass {
         global $DB;
 
@@ -91,6 +125,16 @@ class progress_repository {
         return $progress;
     }
 
+    /**
+     * Handles add event.
+     *
+     * @param int $trailid The trailid.
+     * @param int $stepid The stepid.
+     * @param int $userid The userid.
+     * @param string $eventname The eventname.
+     * @param array $details The details.
+     * @return void The result.
+     */
     public function add_event(int $trailid, int $stepid, int $userid, string $eventname, array $details = []): void {
         global $DB;
 
@@ -104,6 +148,12 @@ class progress_repository {
         ]);
     }
 
+    /**
+     * Returns the report rows.
+     *
+     * @param int $trailid The trailid.
+     * @return array The result.
+     */
     public function get_report_rows(int $trailid): array {
         global $DB;
 

@@ -54,7 +54,10 @@ if ($form->is_cancelled()) {
 if ($data = $form->get_data()) {
     $data = $configuration->build_edge_config($data);
     $repository->save_edge($data);
-    redirect(new moodle_url('/local/kopere_trail/edges.php', ['trailid' => $trailid]), get_string($edge ? 'edgeupdated' : 'edgecreated', 'local_kopere_trail'));
+    redirect(
+        new moodle_url('/local/kopere_trail/edges.php', ['trailid' => $trailid]),
+        get_string($edge ? 'edgeupdated' : 'edgecreated', 'local_kopere_trail')
+    );
 }
 if ($edge) {
     $form->set_data($edge);

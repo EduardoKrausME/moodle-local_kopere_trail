@@ -24,16 +24,26 @@
 
 namespace local_kopere_trail\task;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the sync enrolments implementation.
+ */
 class sync_enrolments extends \core\task\scheduled_task {
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
     public function get_name(): string {
         return get_string('task_sync_enrolments', 'local_kopere_trail');
     }
 
+    /**
+     * Executes the external function.
+     *
+     * @return void The result.
+     */
     public function execute(): void {
         $service = new \local_kopere_trail\service\enrolment_service();
         $service->sync_assignments();
     }
 }
-

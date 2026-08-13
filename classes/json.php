@@ -24,9 +24,16 @@
 
 namespace local_kopere_trail;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the json implementation.
+ */
 class json {
+    /**
+     * Handles decode.
+     *
+     * @param string|null $value The value.
+     * @return array The result.
+     */
     public static function decode(?string $value): array {
         if ($value === null || trim($value) === '') {
             return [];
@@ -40,10 +47,22 @@ class json {
         return $decoded;
     }
 
+    /**
+     * Handles encode.
+     *
+     * @param array $value The value.
+     * @return string The result.
+     */
     public static function encode(array $value): string {
         return json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
+    /**
+     * Checks whether valid.
+     *
+     * @param string|null $value The value.
+     * @return bool The result.
+     */
     public static function is_valid(?string $value): bool {
         if ($value === null || trim($value) === '') {
             return true;
@@ -53,4 +72,3 @@ class json {
         return json_last_error() === JSON_ERROR_NONE;
     }
 }
-

@@ -24,17 +24,48 @@
 
 namespace local_kopere_trail\contract;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Defines the content provider contract.
+ */
 interface content_provider {
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
     public function get_name(): string;
 
+    /**
+     * Returns the icon.
+     *
+     * @return string The result.
+     */
     public function get_icon(): string;
 
+    /**
+     * Returns the launch url.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return \moodle_url|null The result.
+     */
     public function get_launch_url(\stdClass $step, int $userid): ?\moodle_url;
 
+    /**
+     * Handles ensure access.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return void The result.
+     */
     public function ensure_access(\stdClass $step, int $userid): void;
 
+    /**
+     * Exports the view data.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return array The result.
+     */
     public function export_view_data(\stdClass $step, int $userid): array;
 }
-

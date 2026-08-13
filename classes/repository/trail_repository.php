@@ -24,15 +24,29 @@
 
 namespace local_kopere_trail\repository;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the trail repository implementation.
+ */
 class trail_repository {
+    /**
+     * Returns the trail.
+     *
+     * @param int $trailid The trailid.
+     * @param bool $mustexist The mustexist.
+     * @return \stdClass|null The result.
+     */
     public function get_trail(int $trailid, bool $mustexist = true): ?\stdClass {
         global $DB;
         $trail = $DB->get_record('local_kopere_trail', ['id' => $trailid], '*', $mustexist ? MUST_EXIST : IGNORE_MISSING);
         return $trail ?: null;
     }
 
+    /**
+     * Returns the all trails.
+     *
+     * @param bool $includehidden The includehidden.
+     * @return array The result.
+     */
     public function get_all_trails(bool $includehidden = true): array {
         global $DB;
         $params = [];
@@ -44,6 +58,12 @@ class trail_repository {
         return $DB->get_records_select('local_kopere_trail', $where, $params, 'sortorder ASC, name ASC');
     }
 
+    /**
+     * Returns the user trails.
+     *
+     * @param int $userid The userid.
+     * @return array The result.
+     */
     public function get_user_trails(int $userid): array {
         global $DB;
         $now = time();
@@ -65,6 +85,12 @@ class trail_repository {
         ]);
     }
 
+    /**
+     * Saves the trail.
+     *
+     * @param \stdClass $data The data.
+     * @return int The result.
+     */
     public function save_trail(\stdClass $data): int {
         global $DB;
         $now = time();
@@ -72,7 +98,10 @@ class trail_repository {
             'name' => $data->name,
             'code' => trim((string)($data->code ?? '')) !== '' ? trim((string)$data->code) : null,
             'summary' => is_array($data->summary ?? null) ? ($data->summary['text'] ?? null) : ($data->summary ?? null),
-            'summaryformat' => (int)($data->summaryformat ?? (is_array($data->summary ?? null) ? ($data->summary['format'] ?? FORMAT_HTML) : FORMAT_HTML)),
+            'summaryformat' => (int)(
+                $data->summaryformat
+                ?? (is_array($data->summary ?? null) ? ($data->summary['format'] ?? FORMAT_HTML) : FORMAT_HTML)
+            ),
             'visible' => empty($data->visible) ? 0 : 1,
             'startdate' => (int)($data->startdate ?? 0),
             'enddate' => (int)($data->enddate ?? 0),
@@ -92,6 +121,13 @@ class trail_repository {
         return $DB->insert_record('local_kopere_trail', $record);
     }
 
+    /**
+     * Returns the steps.
+     *
+     * @param int $trailid The trailid.
+     * @param bool $includehidden The includehidden.
+     * @return array The result.
+     */
     public function get_steps(int $trailid, bool $includehidden = false): array {
         global $DB;
         $params = ['trailid' => $trailid];
@@ -103,20 +139,38 @@ class trail_repository {
         return $DB->get_records_select('local_kopere_trail_step', $where, $params, 'sortorder ASC, id ASC');
     }
 
+    /**
+     * Returns the step.
+     *
+     * @param int $stepid The stepid.
+     * @param bool $mustexist The mustexist.
+     * @return \stdClass|null The result.
+     */
     public function get_step(int $stepid, bool $mustexist = true): ?\stdClass {
         global $DB;
         $step = $DB->get_record('local_kopere_trail_step', ['id' => $stepid], '*', $mustexist ? MUST_EXIST : IGNORE_MISSING);
         return $step ?: null;
     }
 
+    /**
+     * Saves the step.
+     *
+     * @param \stdClass $data The data.
+     * @return int The result.
+     */
     public function save_step(\stdClass $data): int {
         global $DB;
         $now = time();
         $record = (object)[
             'trailid' => (int)$data->trailid,
             'name' => $data->name,
-            'description' => is_array($data->description ?? null) ? ($data->description['text'] ?? null) : ($data->description ?? null),
-            'descriptionformat' => (int)($data->descriptionformat ?? (is_array($data->description ?? null) ? ($data->description['format'] ?? FORMAT_HTML) : FORMAT_HTML)),
+            'description' => is_array($data->description ?? null)
+                ? ($data->description['text'] ?? null)
+                : ($data->description ?? null),
+            'descriptionformat' => (int)(
+                $data->descriptionformat
+                ?? (is_array($data->description ?? null) ? ($data->description['format'] ?? FORMAT_HTML) : FORMAT_HTML)
+            ),
             'contenttype' => $data->contenttype,
             'contentconfig' => $data->contentconfig ?? null,
             'completiontype' => $data->completiontype,
@@ -147,22 +201,48 @@ class trail_repository {
         return $DB->insert_record('local_kopere_trail_step', $record);
     }
 
+    /**
+     * Returns the edges.
+     *
+     * @param int $trailid The trailid.
+     * @return array The result.
+     */
     public function get_edges(int $trailid): array {
         global $DB;
         return $DB->get_records('local_kopere_trail_edge', ['trailid' => $trailid], 'sortorder ASC, id ASC');
     }
 
+    /**
+     * Returns the edge.
+     *
+     * @param int $edgeid The edgeid.
+     * @param bool $mustexist The mustexist.
+     * @return \stdClass|null The result.
+     */
     public function get_edge(int $edgeid, bool $mustexist = true): ?\stdClass {
         global $DB;
         $edge = $DB->get_record('local_kopere_trail_edge', ['id' => $edgeid], '*', $mustexist ? MUST_EXIST : IGNORE_MISSING);
         return $edge ?: null;
     }
 
+    /**
+     * Returns the incoming edges.
+     *
+     * @param int $trailid The trailid.
+     * @param int $stepid The stepid.
+     * @return array The result.
+     */
     public function get_incoming_edges(int $trailid, int $stepid): array {
         global $DB;
         return $DB->get_records('local_kopere_trail_edge', ['trailid' => $trailid, 'tostepid' => $stepid], 'sortorder ASC, id ASC');
     }
 
+    /**
+     * Saves the edge.
+     *
+     * @param \stdClass $data The data.
+     * @return int The result.
+     */
     public function save_edge(\stdClass $data): int {
         global $DB;
         $now = time();
@@ -187,17 +267,40 @@ class trail_repository {
         return $DB->insert_record('local_kopere_trail_edge', $record);
     }
 
+    /**
+     * Returns the enrolment.
+     *
+     * @param int $trailid The trailid.
+     * @param int $userid The userid.
+     * @return \stdClass|null The result.
+     */
     public function get_enrolment(int $trailid, int $userid): ?\stdClass {
         global $DB;
         $record = $DB->get_record('local_kopere_trail_enrol', ['trailid' => $trailid, 'userid' => $userid], '*', IGNORE_MISSING);
         return $record ?: null;
     }
 
+    /**
+     * Checks whether active enrolment.
+     *
+     * @param int $trailid The trailid.
+     * @param int $userid The userid.
+     * @return bool The result.
+     */
     public function has_active_enrolment(int $trailid, int $userid): bool {
         global $DB;
         return $DB->record_exists('local_kopere_trail_enrol', ['trailid' => $trailid, 'userid' => $userid, 'status' => 'active']);
     }
 
+    /**
+     * Handles ensure enrolment.
+     *
+     * @param int $trailid The trailid.
+     * @param int $userid The userid.
+     * @param string $source The source.
+     * @param int $sourceid The sourceid.
+     * @return \stdClass The result.
+     */
     public function ensure_enrolment(int $trailid, int $userid, string $source = 'manual', int $sourceid = 0): \stdClass {
         global $DB;
         $record = $this->get_enrolment($trailid, $userid);
@@ -228,6 +331,13 @@ class trail_repository {
         return $record;
     }
 
+    /**
+     * Handles suspend enrolment.
+     *
+     * @param int $trailid The trailid.
+     * @param int $userid The userid.
+     * @return void The result.
+     */
     public function suspend_enrolment(int $trailid, int $userid): void {
         global $DB;
         $record = $this->get_enrolment($trailid, $userid);
@@ -240,6 +350,12 @@ class trail_repository {
         $DB->update_record('local_kopere_trail_enrol', $record);
     }
 
+    /**
+     * Returns the active assignments.
+     *
+     * @param int|null $trailid The trailid.
+     * @return array The result.
+     */
     public function get_active_assignments(?int $trailid = null): array {
         global $DB;
         $conditions = ['status' => 'active'];
@@ -249,11 +365,23 @@ class trail_repository {
         return $DB->get_records('local_kopere_trail_assign', $conditions, 'id ASC');
     }
 
+    /**
+     * Returns the assignments by trail.
+     *
+     * @param int $trailid The trailid.
+     * @return array The result.
+     */
     public function get_assignments_by_trail(int $trailid): array {
         global $DB;
         return $DB->get_records('local_kopere_trail_assign', ['trailid' => $trailid], 'assigntype ASC, id ASC');
     }
 
+    /**
+     * Saves the assignment.
+     *
+     * @param \stdClass $data The data.
+     * @return int The result.
+     */
     public function save_assignment(\stdClass $data): int {
         global $DB;
         $now = time();
@@ -278,11 +406,25 @@ class trail_repository {
         return $DB->insert_record('local_kopere_trail_assign', $record);
     }
 
+    /**
+     * Returns the assignment source records.
+     *
+     * @param int $trailid The trailid.
+     * @return array The result.
+     */
     public function get_assignment_source_records(int $trailid): array {
         global $DB;
         return $DB->get_records('local_kopere_trail_enrolsrc', ['trailid' => $trailid], 'id ASC');
     }
 
+    /**
+     * Handles upsert assignment source.
+     *
+     * @param int $trailid The trailid.
+     * @param int $userid The userid.
+     * @param \stdClass $assignment The assignment.
+     * @return void The result.
+     */
     public function upsert_assignment_source(int $trailid, int $userid, \stdClass $assignment): void {
         global $DB;
         $existing = $DB->get_record('local_kopere_trail_enrolsrc', [
@@ -309,16 +451,34 @@ class trail_repository {
         ]);
     }
 
+    /**
+     * Deletes the assignment source.
+     *
+     * @param int $sourceid The sourceid.
+     * @return void The result.
+     */
     public function delete_assignment_source(int $sourceid): void {
         global $DB;
         $DB->delete_records('local_kopere_trail_enrolsrc', ['id' => $sourceid]);
     }
 
+    /**
+     * Handles user has assignment source.
+     *
+     * @param int $trailid The trailid.
+     * @param int $userid The userid.
+     * @return bool The result.
+     */
     public function user_has_assignment_source(int $trailid, int $userid): bool {
         global $DB;
         return $DB->record_exists('local_kopere_trail_enrolsrc', ['trailid' => $trailid, 'userid' => $userid]);
     }
 
+    /**
+     * Returns the trailids requiring sync.
+     *
+     * @return array The result.
+     */
     public function get_trailids_requiring_sync(): array {
         global $DB;
         $sql = "SELECT DISTINCT trailid FROM {local_kopere_trail_assign}
@@ -328,25 +488,60 @@ class trail_repository {
         return array_map('intval', array_keys($records));
     }
 
+    /**
+     * Returns the active enrolments.
+     *
+     * @param int $limitfrom The limitfrom.
+     * @param int $limitnum The limitnum.
+     * @return array The result.
+     */
     public function get_active_enrolments(int $limitfrom = 0, int $limitnum = 0): array {
         global $DB;
         return $DB->get_records('local_kopere_trail_enrol', ['status' => 'active'], 'id ASC', '*', $limitfrom, $limitnum);
     }
 
+    /**
+     * Handles move trail.
+     *
+     * @param int $id The id.
+     * @param string $direction The direction.
+     * @return void The result.
+     */
     public function move_trail(int $id, string $direction): void {
         $this->move_record('local_kopere_trail', $id, [], $direction);
     }
 
+    /**
+     * Handles move step.
+     *
+     * @param int $id The id.
+     * @param string $direction The direction.
+     * @return void The result.
+     */
     public function move_step(int $id, string $direction): void {
         $step = $this->get_step($id);
         $this->move_record('local_kopere_trail_step', $id, ['trailid' => (int)$step->trailid], $direction);
     }
 
+    /**
+     * Handles move edge.
+     *
+     * @param int $id The id.
+     * @param string $direction The direction.
+     * @return void The result.
+     */
     public function move_edge(int $id, string $direction): void {
         $edge = $this->get_edge($id);
         $this->move_record('local_kopere_trail_edge', $id, ['trailid' => (int)$edge->trailid], $direction);
     }
 
+    /**
+     * Handles next sortorder.
+     *
+     * @param string $table The table.
+     * @param array $conditions The conditions.
+     * @return int The result.
+     */
     private function next_sortorder(string $table, array $conditions = []): int {
         global $DB;
         $records = $DB->get_records($table, $conditions, 'sortorder DESC', 'id, sortorder', 0, 1);
@@ -357,6 +552,15 @@ class trail_repository {
         return ((int)$record->sortorder) + 10;
     }
 
+    /**
+     * Handles move record.
+     *
+     * @param string $table The table.
+     * @param int $id The id.
+     * @param array $conditions The conditions.
+     * @param string $direction The direction.
+     * @return void The result.
+     */
     private function move_record(string $table, int $id, array $conditions, string $direction): void {
         global $DB;
         $current = $DB->get_record($table, ['id' => $id] + $conditions, '*', MUST_EXIST);

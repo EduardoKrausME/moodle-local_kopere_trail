@@ -24,11 +24,23 @@
 
 namespace local_kopere_trail\contract;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Defines the competency provider contract.
+ */
 interface competency_provider {
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
     public function get_name(): string;
 
+    /**
+     * Exports the competency data.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return array The result.
+     */
     public function export_competency_data(\stdClass $step, int $userid): array;
 }
-

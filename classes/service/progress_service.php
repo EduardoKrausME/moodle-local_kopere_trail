@@ -24,14 +24,43 @@
 
 namespace local_kopere_trail\service;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the progress service implementation.
+ */
 class progress_service {
+    /**
+     * Trails.
+     *
+     * @var \local_kopere_trail\repository\trail_repository
+     */
     private \local_kopere_trail\repository\trail_repository $trails;
+    /**
+     * Progress.
+     *
+     * @var \local_kopere_trail\repository\progress_repository
+     */
     private \local_kopere_trail\repository\progress_repository $progress;
+    /**
+     * Plugins.
+     *
+     * @var subplugin_manager
+     */
     private subplugin_manager $plugins;
+    /**
+     * Enrolments.
+     *
+     * @var enrolment_service
+     */
     private enrolment_service $enrolments;
 
+    /**
+     * Creates a new instance.
+     *
+     * @param \local_kopere_trail\repository\trail_repository|null $trails The trails.
+     * @param \local_kopere_trail\repository\progress_repository|null $progress The progress.
+     * @param subplugin_manager|null $plugins The plugins.
+     * @param enrolment_service|null $enrolments The enrolments.
+     */
     public function __construct(
         ?\local_kopere_trail\repository\trail_repository $trails = null,
         ?\local_kopere_trail\repository\progress_repository $progress = null,
@@ -44,15 +73,37 @@ class progress_service {
         $this->enrolments = $enrolments ?? new enrolment_service($this->trails, $this->plugins);
     }
 
+    /**
+     * Handles rebuild user progress.
+     *
+     * @param int $trailid The trailid.
+     * @param int $userid The userid.
+     * @return \stdClass The result.
+     */
     public function rebuild_user_progress(int $trailid, int $userid): \stdClass {
         $this->assert_enrolled($trailid, $userid);
         return $this->calculate_progress($trailid, $userid, true);
     }
 
+    /**
+     * Handles preview user progress.
+     *
+     * @param int $trailid The trailid.
+     * @param int $userid The userid.
+     * @return \stdClass The result.
+     */
     public function preview_user_progress(int $trailid, int $userid): \stdClass {
         return $this->calculate_progress($trailid, $userid, false);
     }
 
+    /**
+     * Handles calculate progress.
+     *
+     * @param int $trailid The trailid.
+     * @param int $userid The userid.
+     * @param bool $persist The persist.
+     * @return \stdClass The result.
+     */
     private function calculate_progress(int $trailid, int $userid, bool $persist): \stdClass {
         $trail = $this->trails->get_trail($trailid);
         $steps = $this->get_personalized_steps($trailid, $userid);
@@ -70,7 +121,7 @@ class progress_service {
             }
         }
 
-        $requiredsteps = array_values(array_filter($steps, static fn(\stdClass $step): bool => empty($step->optional)));
+        $requiredsteps = array_values(array_filter($steps, static fn(\stdClass $step) : bool => empty($step->optional)));
         $total = count($requiredsteps);
         $completed = 0;
         $currentstepid = 0;
@@ -124,6 +175,13 @@ class progress_service {
         return $record;
     }
 
+    /**
+     * Handles mark step completed.
+     *
+     * @param int $stepid The stepid.
+     * @param int $userid The userid.
+     * @return \stdClass The result.
+     */
     public function mark_step_completed(int $stepid, int $userid): \stdClass {
         $step = $this->trails->get_step($stepid);
         $this->assert_enrolled((int)$step->trailid, $userid);
@@ -150,10 +208,24 @@ class progress_service {
         $record->source = $step->completiontype;
         $record->details = \local_kopere_trail\json::encode(['manual' => true]);
         $this->progress->save_step_progress($record);
-        $this->progress->add_event((int)$step->trailid, $stepid, $userid, 'step_completed', ['completiontype' => $step->completiontype]);
+        $this->progress->add_event(
+            (int)$step->trailid,
+            $stepid,
+            $userid,
+            'step_completed',
+            ['completiontype' => $step->completiontype]
+        );
         return $this->rebuild_user_progress((int)$step->trailid, $userid);
     }
 
+    /**
+     * Exports the step cards.
+     *
+     * @param int $trailid The trailid.
+     * @param int $userid The userid.
+     * @param \stdClass|null $trailprogress The trailprogress.
+     * @return array The result.
+     */
     public function export_step_cards(int $trailid, int $userid, ?\stdClass $trailprogress = null): array {
         $trailprogress = $trailprogress ?? $this->rebuild_user_progress($trailid, $userid);
         $steps = $this->get_personalized_steps($trailid, $userid);
@@ -188,7 +260,10 @@ class progress_service {
                 'name' => format_string($step->name),
                 'description' => $description,
                 'contenttype' => $this->plugins->get_plugin_label(subplugin_manager::TYPE_CONTENT, (string)$step->contenttype),
-                'completiontype' => $this->plugins->get_plugin_label(subplugin_manager::TYPE_COMPLETION, (string)$step->completiontype),
+                'completiontype' => $this->plugins->get_plugin_label(
+                    subplugin_manager::TYPE_COMPLETION,
+                    (string)$step->completiontype
+                ),
                 'optional' => !empty($step->optional),
                 'required' => empty($step->optional),
                 'available' => !empty($state['available']),
@@ -201,7 +276,10 @@ class progress_service {
                 'estimatedtime' => (int)$step->estimatedtime,
                 'launchurl' => $launchurl ? $launchurl->out(false) : null,
                 'canlaunch' => $launchurl && !empty($state['available']),
-                'cancomplete' => $isenrolled && !empty($state['available']) && empty($state['completed']) && $this->can_complete_manually($step, $userid),
+                'cancomplete' => $isenrolled
+                    && !empty($state['available'])
+                    && empty($state['completed'])
+                    && $this->can_complete_manually($step, $userid),
                 'completeurl' => (new \moodle_url('/local/kopere_trail/view.php', [
                     'id' => $trailid,
                     'action' => 'complete',
@@ -216,6 +294,14 @@ class progress_service {
         return $cards;
     }
 
+    /**
+     * Returns the certificate url.
+     *
+     * @param \stdClass $trail The trail.
+     * @param int $userid The userid.
+     * @param \stdClass $progress The progress.
+     * @return \moodle_url|null The result.
+     */
     public function get_certificate_url(\stdClass $trail, int $userid, \stdClass $progress): ?\moodle_url {
         if (($progress->status ?? '') !== 'completed') {
             return null;
@@ -226,6 +312,11 @@ class progress_service {
         return $handler ? $handler->get_certificate_url($trail, $userid) : null;
     }
 
+    /**
+     * Handles refresh active progress.
+     *
+     * @return int The result.
+     */
     public function refresh_active_progress(): int {
         $count = 0;
         $access = new access_service($this->trails);
@@ -249,6 +340,14 @@ class progress_service {
         return $count;
     }
 
+    /**
+     * Handles sync completion state.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @param \stdClass|null $stored The stored.
+     * @return array The result.
+     */
     private function sync_completion_state(\stdClass $step, int $userid, ?\stdClass $stored): array {
         $handler = $this->plugins->get_completion_handler($step->completiontype);
         $native = $handler ? $handler->get_completion($step, $userid) : [
@@ -275,6 +374,15 @@ class progress_service {
         ];
     }
 
+    /**
+     * Handles apply availability.
+     *
+     * @param int $trailid The trailid.
+     * @param array $steps The steps.
+     * @param array $stepstates The stepstates.
+     * @param int $userid The userid.
+     * @return array The result.
+     */
     private function apply_availability(int $trailid, array $steps, array $stepstates, int $userid): array {
         $edges = $this->trails->get_edges($trailid);
         if (!$edges) {
@@ -322,6 +430,13 @@ class progress_service {
         return $stepstates;
     }
 
+    /**
+     * Handles apply linear availability.
+     *
+     * @param array $steps The steps.
+     * @param array $stepstates The stepstates.
+     * @return array The result.
+     */
     private function apply_linear_availability(array $steps, array $stepstates): array {
         $lastrequired = null;
         foreach ($steps as $step) {
@@ -343,6 +458,14 @@ class progress_service {
         return $stepstates;
     }
 
+    /**
+     * Saves the step state.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @param array $state The state.
+     * @return void The result.
+     */
     private function save_step_state(\stdClass $step, int $userid, array $state): void {
         $record = $this->progress->get_step_progress((int)$step->id, $userid) ?: (object)[
             'trailid' => (int)$step->trailid,
@@ -366,6 +489,13 @@ class progress_service {
         $this->progress->save_step_progress($record);
     }
 
+    /**
+     * Returns the personalized steps.
+     *
+     * @param int $trailid The trailid.
+     * @param int $userid The userid.
+     * @return array The result.
+     */
     private function get_personalized_steps(int $trailid, int $userid): array {
         $steps = $this->trails->get_steps($trailid, false);
         return array_values(array_filter($steps, function(\stdClass $step) use ($userid): bool {
@@ -378,20 +508,44 @@ class progress_service {
         }));
     }
 
+    /**
+     * Checks whether complete manually.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return bool The result.
+     */
     private function can_complete_manually(\stdClass $step, int $userid): bool {
         $handler = $this->plugins->get_completion_handler($step->completiontype);
         return $handler && $handler->can_complete_manually($step, $userid);
     }
 
+    /**
+     * Handles assert enrolled.
+     *
+     * @param int $trailid The trailid.
+     * @param int $userid The userid.
+     * @return void The result.
+     */
     private function assert_enrolled(int $trailid, int $userid): void {
         if (!$this->trails->has_active_enrolment($trailid, $userid)) {
             throw new \required_capability_exception(\context_system::instance(), 'local/kopere_trail:view', 'nopermissions', '');
         }
     }
 
+    /**
+     * Returns the status label.
+     *
+     * @param array $state The state.
+     * @return string The result.
+     */
     private function get_status_label(array $state): string {
-        if (!empty($state['completed'])) { return get_string('completed', 'local_kopere_trail'); }
-        if (!empty($state['available'])) { return get_string('available', 'local_kopere_trail'); }
+        if (!empty($state['completed'])) {
+            return get_string('completed', 'local_kopere_trail');
+        }
+        if (!empty($state['available'])) {
+            return get_string('available', 'local_kopere_trail');
+        }
         return get_string('locked', 'local_kopere_trail');
     }
 }

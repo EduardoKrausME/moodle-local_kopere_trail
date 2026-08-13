@@ -24,11 +24,27 @@
 
 namespace trailcompletion_activitycompletion;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the handler implementation.
+ */
 class handler implements \local_kopere_trail\contract\completion_provider, \local_kopere_trail\contract\configurable_provider {
-    public function get_name(): string { return get_string('pluginname', 'trailcompletion_activitycompletion'); }
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
+    public function get_name(): string {
+        return get_string('pluginname', 'trailcompletion_activitycompletion');
+    }
 
+    /**
+     * Handles add configuration fields.
+     *
+     * @param \MoodleQuickForm $mform The mform.
+     * @param string $selectorfield The selectorfield.
+     * @param \stdClass|null $currentdata The currentdata.
+     * @return void The result.
+     */
     public function add_configuration_fields(\MoodleQuickForm $mform, string $selectorfield, ?\stdClass $currentdata = null): void {
         $selected = (int)($currentdata->completioncmid ?? 0);
         $mform->addElement('autocomplete', 'completioncmid', get_string('completioncmid', 'local_kopere_trail'),
@@ -41,29 +57,75 @@ class handler implements \local_kopere_trail\contract\completion_provider, \loca
         $mform->hideIf('completioncmid', $selectorfield, 'neq', 'activitycompletion');
     }
 
+    /**
+     * Prepares the configuration.
+     *
+     * @param \stdClass $data The data.
+     * @param array $config The config.
+     * @return \stdClass The result.
+     */
     public function prepare_configuration(\stdClass $data, array $config): \stdClass {
         $data->completioncmid = (int)($config['cmid'] ?? 0);
         return $data;
     }
-    public function build_configuration(\stdClass $data): array { return ['cmid' => (int)($data->completioncmid ?? 0)]; }
+    /**
+     * Builds the configuration.
+     *
+     * @param \stdClass $data The data.
+     * @return array The result.
+     */
+    public function build_configuration(\stdClass $data): array {
+        return ['cmid' => (int)($data->completioncmid ?? 0)];
+    }
+    /**
+     * Validates the configuration.
+     *
+     * @param array $data The data.
+     * @return array The result.
+     */
     public function validate_configuration(array $data): array {
         $cmid = (int)($data['completioncmid'] ?? 0);
-        if ($cmid <= 0) { return ['completioncmid' => get_string('required')]; }
+        if ($cmid <= 0) {
+            return ['completioncmid' => get_string('required')];
+        }
         if (!get_coursemodule_from_id('', $cmid, 0, false, IGNORE_MISSING)) {
             return ['completioncmid' => get_string('invalidactivity', 'local_kopere_trail')];
         }
         return [];
     }
-    public function can_complete_manually(\stdClass $step, int $userid): bool { return false; }
+    /**
+     * Checks whether complete manually.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return bool The result.
+     */
+    public function can_complete_manually(\stdClass $step, int $userid): bool {
+        return false;
+    }
 
+    /**
+     * Returns the completion.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return array The result.
+     */
     public function get_completion(\stdClass $step, int $userid): array {
         global $DB, $CFG;
         require_once($CFG->libdir . '/completionlib.php');
-        $config = array_merge(\local_kopere_trail\json::decode($step->contentconfig), \local_kopere_trail\json::decode($step->completionconfig));
+        $config = array_merge(
+            \local_kopere_trail\json::decode($step->contentconfig),
+            \local_kopere_trail\json::decode($step->completionconfig)
+        );
         $cmid = (int)($config['cmid'] ?? 0);
-        if ($cmid <= 0) { return $this->result(false, 0, ['reason' => 'cmid_missing']); }
+        if ($cmid <= 0) {
+            return $this->result(false, 0, ['reason' => 'cmid_missing']);
+        }
         $cm = get_coursemodule_from_id('', $cmid, 0, false, IGNORE_MISSING);
-        if (!$cm) { return $this->result(false, 0, ['reason' => 'cm_not_found']); }
+        if (!$cm) {
+            return $this->result(false, 0, ['reason' => 'cm_not_found']);
+        }
         $course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
         $completion = new \completion_info($course);
         $data = $completion->get_data($cm, false, $userid);
@@ -71,6 +133,14 @@ class handler implements \local_kopere_trail\contract\completion_provider, \loca
         return $this->result($completed, $completed ? 100 : 0, ['cmid' => $cmid, 'completionstate' => (int)$data->completionstate]);
     }
 
+    /**
+     * Handles result.
+     *
+     * @param bool $completed The completed.
+     * @param float $percent The percent.
+     * @param array $details The details.
+     * @return array The result.
+     */
     private function result(bool $completed, float $percent, array $details): array {
         return ['completed' => $completed, 'progresspercent' => $percent, 'source' => 'activitycompletion', 'details' => $details];
     }

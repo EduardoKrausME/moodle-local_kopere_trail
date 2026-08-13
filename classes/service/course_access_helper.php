@@ -24,9 +24,17 @@
 
 namespace local_kopere_trail\service;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the course access helper implementation.
+ */
 class course_access_helper {
+    /**
+     * Handles ensure course enrolment.
+     *
+     * @param int $courseid The courseid.
+     * @param int $userid The userid.
+     * @return void The result.
+     */
     public static function ensure_course_enrolment(int $courseid, int $userid): void {
         global $DB, $CFG;
         require_once($CFG->libdir . '/enrollib.php');

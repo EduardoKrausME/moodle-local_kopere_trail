@@ -29,13 +29,27 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->libdir . '/externallib.php');
 
+/**
+ * Provides the complete step implementation.
+ */
 class complete_step extends \external_api {
+    /**
+     * Defines external function parameters.
+     *
+     * @return \external_function_parameters The result.
+     */
     public static function execute_parameters(): \external_function_parameters {
         return new \external_function_parameters([
             'stepid' => new \external_value(PARAM_INT, 'Trail step id'),
         ]);
     }
 
+    /**
+     * Executes the external function.
+     *
+     * @param int $stepid The stepid.
+     * @return array The result.
+     */
     public static function execute(int $stepid): array {
         global $USER;
 
@@ -64,6 +78,11 @@ class complete_step extends \external_api {
         ];
     }
 
+    /**
+     * Defines the external function return structure.
+     *
+     * @return \external_single_structure The result.
+     */
     public static function execute_returns(): \external_single_structure {
         return new \external_single_structure([
             'completed' => new \external_value(PARAM_BOOL, 'Completion status'),
@@ -71,4 +90,3 @@ class complete_step extends \external_api {
         ]);
     }
 }
-

@@ -24,25 +24,45 @@
 
 namespace local_kopere_trail\event;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the trail viewed implementation.
+ */
 class trail_viewed extends \core\event\base {
+    /**
+     * Initialises the component.
+     *
+     * @return void The result.
+     */
     protected function init(): void {
         $this->data['objecttable'] = 'local_kopere_trail';
         $this->data['crud'] = 'r';
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
     }
 
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
     public static function get_name(): string {
         return get_string('event_trail_viewed', 'local_kopere_trail');
     }
 
+    /**
+     * Returns the event description.
+     *
+     * @return string The result.
+     */
     public function get_description(): string {
         return "The user with id '{$this->userid}' viewed the trail with id '{$this->objectid}'.";
     }
 
+    /**
+     * Returns the related URL.
+     *
+     * @return \moodle_url The result.
+     */
     public function get_url(): \moodle_url {
         return new \moodle_url('/local/kopere_trail/view.php', ['id' => $this->objectid]);
     }
 }
-

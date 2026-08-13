@@ -22,8 +22,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Handles xmldb local kopere trail upgrade.
+ *
+ * @param int $oldversion The oldversion.
+ * @return bool The result.
+ */
 function xmldb_local_kopere_trail_upgrade(int $oldversion): bool {
     global $DB;
 
@@ -31,7 +35,16 @@ function xmldb_local_kopere_trail_upgrade(int $oldversion): bool {
 
     if ($oldversion < 2026081204) {
         $steptable = new xmldb_table('local_kopere_trail_step');
-        $competencytype = new xmldb_field('competencytype', XMLDB_TYPE_CHAR, '100', null, false, false, null, 'personalizationconfig');
+        $competencytype = new xmldb_field(
+            'competencytype',
+            XMLDB_TYPE_CHAR,
+            '100',
+            null,
+            false,
+            false,
+            null,
+            'personalizationconfig'
+        );
         if (!$dbman->field_exists($steptable, $competencytype)) {
             $dbman->add_field($steptable, $competencytype);
         }

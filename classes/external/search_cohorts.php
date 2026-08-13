@@ -29,11 +29,25 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->libdir . '/externallib.php');
 
+/**
+ * Provides the search cohorts implementation.
+ */
 class search_cohorts extends \external_api {
+    /**
+     * Defines external function parameters.
+     *
+     * @return \external_function_parameters The result.
+     */
     public static function execute_parameters(): \external_function_parameters {
         return new \external_function_parameters(['query' => new \external_value(PARAM_RAW_TRIMMED, 'Search text')]);
     }
 
+    /**
+     * Executes the external function.
+     *
+     * @param string $query The query.
+     * @return array The result.
+     */
     public static function execute(string $query): array {
         global $DB;
         $params = self::validate_parameters(self::execute_parameters(), ['query' => $query]);
@@ -49,7 +63,16 @@ class search_cohorts extends \external_api {
         }
         $like = '%' . $DB->sql_like_escape($query) . '%';
         $where = $DB->sql_like('name', ':name', false) . ' OR ' . $DB->sql_like('idnumber', ':idnumber', false);
-        $records = $DB->get_records_select('cohort', $where, ['name' => $like, 'idnumber' => $like], 'name ASC', 'id, name, idnumber', 0, 30);
+        $records = $DB->get_records_select(
+            'cohort',
+            $where,
+            ['name' => $like,
+            'idnumber' => $like],
+            'name ASC',
+            'id, name, idnumber',
+            0,
+            30
+        );
         $out = [];
         foreach ($records as $record) {
             $label = format_string($record->name);
@@ -61,6 +84,11 @@ class search_cohorts extends \external_api {
         return $out;
     }
 
+    /**
+     * Defines the external function return structure.
+     *
+     * @return \external_multiple_structure The result.
+     */
     public static function execute_returns(): \external_multiple_structure {
         return new \external_multiple_structure(new \external_single_structure([
             'id' => new \external_value(PARAM_INT, 'Cohort id'),

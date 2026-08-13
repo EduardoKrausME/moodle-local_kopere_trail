@@ -24,13 +24,36 @@
 
 namespace local_kopere_trail\contract;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Defines the prereq provider contract.
+ */
 interface prereq_provider {
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
     public function get_name(): string;
 
+    /**
+     * Checks whether available.
+     *
+     * @param \stdClass $edge The edge.
+     * @param \stdClass $fromstep The fromstep.
+     * @param \stdClass $tostep The tostep.
+     * @param int $userid The userid.
+     * @return bool The result.
+     */
     public function is_available(\stdClass $edge, \stdClass $fromstep, \stdClass $tostep, int $userid): bool;
 
+    /**
+     * Returns the blocked reason.
+     *
+     * @param \stdClass $edge The edge.
+     * @param \stdClass $fromstep The fromstep.
+     * @param \stdClass $tostep The tostep.
+     * @param int $userid The userid.
+     * @return string The result.
+     */
     public function get_blocked_reason(\stdClass $edge, \stdClass $fromstep, \stdClass $tostep, int $userid): string;
 }
-

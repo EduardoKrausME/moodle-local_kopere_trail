@@ -24,11 +24,30 @@
 
 namespace local_kopere_trail\output;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the manage page implementation.
+ */
 class manage_page implements \renderable, \templatable {
+    /**
+     * Trails.
+     *
+     * @var array
+     */
     private array $trails;
-    public function __construct(array $trails) { $this->trails = $trails; }
+    /**
+     * Creates a new instance.
+     *
+     * @param array $trails The trails.
+     */
+    public function __construct(array $trails) {
+        $this->trails = $trails;
+    }
+    /**
+     * Exports data for a Mustache template.
+     *
+     * @param \renderer_base $output The output.
+     * @return array The result.
+     */
     public function export_for_template(\renderer_base $output): array {
         $items = [];
         foreach ($this->trails as $trail) {
@@ -47,6 +66,10 @@ class manage_page implements \renderable, \templatable {
                 'movedownurl' => (new \moodle_url('/local/kopere_trail/move.php', $base + ['direction' => 'down']))->out(false),
             ];
         }
-        return ['trails' => $items, 'hastrails' => !empty($items), 'createurl' => (new \moodle_url('/local/kopere_trail/edit.php'))->out(false)];
+        return [
+            'trails' => $items,
+            'hastrails' => !empty($items),
+            'createurl' => (new \moodle_url('/local/kopere_trail/edit.php'))->out(false),
+        ];
     }
 }

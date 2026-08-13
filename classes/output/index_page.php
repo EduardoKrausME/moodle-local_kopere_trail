@@ -24,17 +24,40 @@
 
 namespace local_kopere_trail\output;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the index page implementation.
+ */
 class index_page implements \renderable, \templatable {
+    /**
+     * Trails.
+     *
+     * @var array
+     */
     private array $trails;
+    /**
+     * Canmanage.
+     *
+     * @var bool
+     */
     private bool $canmanage;
 
+    /**
+     * Creates a new instance.
+     *
+     * @param array $trails The trails.
+     * @param bool $canmanage The canmanage.
+     */
     public function __construct(array $trails, bool $canmanage) {
         $this->trails = $trails;
         $this->canmanage = $canmanage;
     }
 
+    /**
+     * Exports data for a Mustache template.
+     *
+     * @param \renderer_base $output The output.
+     * @return array The result.
+     */
     public function export_for_template(\renderer_base $output): array {
         $items = [];
         $context = \context_system::instance();
@@ -74,4 +97,3 @@ class index_page implements \renderable, \templatable {
         ];
     }
 }
-

@@ -24,17 +24,37 @@
 
 namespace trailcompletion_manual;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the handler implementation.
+ */
 class handler implements \local_kopere_trail\contract\completion_provider {
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
     public function get_name(): string {
         return get_string('pluginname', 'trailcompletion_manual');
     }
 
+    /**
+     * Checks whether complete manually.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return bool The result.
+     */
     public function can_complete_manually(\stdClass $step, int $userid): bool {
         return true;
     }
 
+    /**
+     * Returns the completion.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return array The result.
+     */
     public function get_completion(\stdClass $step, int $userid): array {
         global $DB;
 
@@ -52,4 +72,3 @@ class handler implements \local_kopere_trail\contract\completion_provider {
         ];
     }
 }
-

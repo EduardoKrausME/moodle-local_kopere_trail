@@ -24,11 +24,23 @@
 
 namespace local_kopere_trail\contract;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Defines the cert provider contract.
+ */
 interface cert_provider {
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
     public function get_name(): string;
 
+    /**
+     * Returns the certificate url.
+     *
+     * @param \stdClass $trail The trail.
+     * @param int $userid The userid.
+     * @return \moodle_url|null The result.
+     */
     public function get_certificate_url(\stdClass $trail, int $userid): ?\moodle_url;
 }
-

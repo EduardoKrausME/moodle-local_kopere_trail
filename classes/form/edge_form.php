@@ -29,7 +29,15 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->libdir . '/formslib.php');
 
+/**
+ * Provides the edge form implementation.
+ */
 class edge_form extends \moodleform {
+    /**
+     * Defines the form fields.
+     *
+     * @return void The result.
+     */
     protected function definition(): void {
         $mform = $this->_form;
         $steps = $this->_customdata['steps'] ?? [];
@@ -51,10 +59,22 @@ class edge_form extends \moodleform {
         $mform->addElement('select', 'ruleplugin', get_string('prereqtype', 'local_kopere_trail'),
             $plugins->get_options(\local_kopere_trail\service\subplugin_manager::TYPE_PREREQ));
         $mform->setDefault('ruleplugin', 'step');
-        $configuration->add_provider_fields($mform, \local_kopere_trail\service\subplugin_manager::TYPE_PREREQ, 'ruleplugin', $currentdata);
+        $configuration->add_provider_fields(
+            $mform,
+            \local_kopere_trail\service\subplugin_manager::TYPE_PREREQ,
+            'ruleplugin',
+            $currentdata
+        );
         $this->add_action_buttons(true, get_string('savechanges', 'local_kopere_trail'));
     }
 
+    /**
+     * Validates submitted form data.
+     *
+     * @param mixed $data The data.
+     * @param mixed $files The files.
+     * @return array The result.
+     */
     public function validation($data, $files): array {
         $errors = parent::validation($data, $files);
         if ((int)($data['fromstepid'] ?? 0) === (int)($data['tostepid'] ?? 0)) {

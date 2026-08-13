@@ -24,12 +24,21 @@
 
 namespace local_kopere_trail\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the provider implementation.
+ */
 class provider implements
     \core_privacy\local\metadata\provider,
     \core_privacy\local\request\plugin\provider {
-    public static function get_metadata(\core_privacy\local\metadata\collection $collection): \core_privacy\local\metadata\collection {
+    /**
+     * Returns the metadata.
+     *
+     * @param \core_privacy\local\metadata\collection $collection The collection.
+     * @return \core_privacy\local\metadata\collection The result.
+     */
+    public static function get_metadata(
+        \core_privacy\local\metadata\collection $collection
+    ): \core_privacy\local\metadata\collection {
         $collection->add_database_table('local_kopere_trail_enrol', [
             'trailid' => 'privacy:metadata:trailid',
             'userid' => 'privacy:metadata:userid',
@@ -60,6 +69,12 @@ class provider implements
         return $collection;
     }
 
+    /**
+     * Returns the contexts for userid.
+     *
+     * @param int $userid The userid.
+     * @return \core_privacy\local\request\contextlist The result.
+     */
     public static function get_contexts_for_userid(int $userid): \core_privacy\local\request\contextlist {
         global $DB;
 
@@ -78,6 +93,12 @@ class provider implements
         return $contextlist;
     }
 
+    /**
+     * Exports the user data.
+     *
+     * @param \core_privacy\local\request\approved_contextlist $contextlist The contextlist.
+     * @return void The result.
+     */
     public static function export_user_data(\core_privacy\local\request\approved_contextlist $contextlist): void {
         global $DB;
 
@@ -88,7 +109,10 @@ class provider implements
             }
 
             $data = (object)[
-                'assignments' => array_values($DB->get_records('local_kopere_trail_assign', ['assigntype' => 'user', 'instanceid' => $userid])),
+                'assignments' => array_values($DB->get_records('local_kopere_trail_assign', [
+                    'assigntype' => 'user',
+                    'instanceid' => $userid,
+                ])),
                 'enrolments' => array_values($DB->get_records('local_kopere_trail_enrol', ['userid' => $userid])),
                 'enrolmentsources' => array_values($DB->get_records('local_kopere_trail_enrolsrc', ['userid' => $userid])),
                 'progress' => array_values($DB->get_records('local_kopere_trail_prog', ['userid' => $userid])),
@@ -102,6 +126,12 @@ class provider implements
         }
     }
 
+    /**
+     * Deletes the data for all users in context.
+     *
+     * @param \context $context The context.
+     * @return void The result.
+     */
     public static function delete_data_for_all_users_in_context(\context $context): void {
         global $DB;
 
@@ -117,6 +147,12 @@ class provider implements
         $DB->delete_records('local_kopere_trail_assign', ['assigntype' => 'user']);
     }
 
+    /**
+     * Deletes the data for user.
+     *
+     * @param \core_privacy\local\request\approved_contextlist $contextlist The contextlist.
+     * @return void The result.
+     */
     public static function delete_data_for_user(\core_privacy\local\request\approved_contextlist $contextlist): void {
         global $DB;
 

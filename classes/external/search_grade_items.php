@@ -29,11 +29,25 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->libdir . '/externallib.php');
 
+/**
+ * Provides the search grade items implementation.
+ */
 class search_grade_items extends \external_api {
+    /**
+     * Defines external function parameters.
+     *
+     * @return \external_function_parameters The result.
+     */
     public static function execute_parameters(): \external_function_parameters {
         return new \external_function_parameters(['query' => new \external_value(PARAM_RAW_TRIMMED, 'Search text')]);
     }
 
+    /**
+     * Executes the external function.
+     *
+     * @param string $query The query.
+     * @return array The result.
+     */
     public static function execute(string $query): array {
         global $DB, $SITE;
         $params = self::validate_parameters(self::execute_parameters(), ['query' => $query]);
@@ -50,16 +64,25 @@ class search_grade_items extends \external_api {
                   JOIN {course} c ON c.id = gi.courseid
                  WHERE c.id <> :siteid
                    AND gi.itemtype <> 'course'
-                   AND (" . $DB->sql_like('gi.itemname', ':itemname', false) . " OR " . $DB->sql_like('c.fullname', ':coursename', false) . ")
+                   AND (" . $DB->sql_like('gi.itemname', ':itemname', false) . "\n"
+                       . " OR " . $DB->sql_like('c.fullname', ':coursename', false) . ")
               ORDER BY c.fullname ASC, gi.sortorder ASC";
         $records = $DB->get_records_sql($sql, ['siteid' => $SITE->id, 'itemname' => $like, 'coursename' => $like], 0, 30);
         $out = [];
         foreach ($records as $record) {
-            $out[] = ['id' => (int)$record->id, 'label' => \local_kopere_trail\form\configuration_fields::grade_item_label($record)];
+            $out[] = [
+                'id' => (int)$record->id,
+                'label' => \local_kopere_trail\form\configuration_fields::grade_item_label($record),
+            ];
         }
         return $out;
     }
 
+    /**
+     * Defines the external function return structure.
+     *
+     * @return \external_multiple_structure The result.
+     */
     public static function execute_returns(): \external_multiple_structure {
         return new \external_multiple_structure(new \external_single_structure([
             'id' => new \external_value(PARAM_INT, 'Grade item id'),

@@ -45,4 +45,3 @@ $page = new \local_kopere_trail\output\edge_list_page($trail, $steps, $edges);
 echo $OUTPUT->header();
 echo $OUTPUT->render_from_template('local_kopere_trail/edge_list', $page->export_for_template($OUTPUT));
 echo $OUTPUT->footer();
-

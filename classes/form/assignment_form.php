@@ -29,7 +29,15 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->libdir . '/formslib.php');
 
+/**
+ * Provides the assignment form implementation.
+ */
 class assignment_form extends \moodleform {
+    /**
+     * Defines the form fields.
+     *
+     * @return void The result.
+     */
     protected function definition(): void {
         $mform = $this->_form;
 
@@ -65,6 +73,13 @@ class assignment_form extends \moodleform {
         $this->add_action_buttons(true, get_string('savechanges', 'local_kopere_trail'));
     }
 
+    /**
+     * Validates submitted form data.
+     *
+     * @param mixed $data The data.
+     * @param mixed $files The files.
+     * @return array The result.
+     */
     public function validation($data, $files): array {
         global $DB;
 

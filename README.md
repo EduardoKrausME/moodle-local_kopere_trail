@@ -60,4 +60,3 @@ Etapas opcionais aparecem na jornada, mas não bloqueiam automaticamente a próx
 ## Administração
 
 A visão administrativa mostra trilhas, etapas, atribuições e relatório por estudante. A ordem é controlada por ações de mover para cima ou para baixo, sem exigir números de ordenação. O relatório lê o progresso persistido, enquanto Scheduled Tasks sincronizam atribuições e atualizam o progresso em segundo plano pelo cron do Moodle.
-

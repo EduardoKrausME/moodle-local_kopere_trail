@@ -29,7 +29,15 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->libdir . '/formslib.php');
 
+/**
+ * Provides the step form implementation.
+ */
 class step_form extends \moodleform {
+    /**
+     * Defines the form fields.
+     *
+     * @return void The result.
+     */
     protected function definition(): void {
         $mform = $this->_form;
         $plugins = new \local_kopere_trail\service\subplugin_manager();
@@ -53,20 +61,40 @@ class step_form extends \moodleform {
         $mform->addElement('select', 'contenttype', get_string('contenttype', 'local_kopere_trail'),
             $plugins->get_options(\local_kopere_trail\service\subplugin_manager::TYPE_CONTENT));
         $mform->setDefault('contenttype', 'html');
-        $configuration->add_provider_fields($mform, \local_kopere_trail\service\subplugin_manager::TYPE_CONTENT, 'contenttype', $currentdata);
+        $configuration->add_provider_fields(
+            $mform,
+            \local_kopere_trail\service\subplugin_manager::TYPE_CONTENT,
+            'contenttype',
+            $currentdata
+        );
 
         $mform->addElement('select', 'completiontype', get_string('completiontype', 'local_kopere_trail'),
             $plugins->get_options(\local_kopere_trail\service\subplugin_manager::TYPE_COMPLETION));
         $mform->setDefault('completiontype', 'manual');
-        $configuration->add_provider_fields($mform, \local_kopere_trail\service\subplugin_manager::TYPE_COMPLETION, 'completiontype', $currentdata);
+        $configuration->add_provider_fields(
+            $mform,
+            \local_kopere_trail\service\subplugin_manager::TYPE_COMPLETION,
+            'completiontype',
+            $currentdata
+        );
 
         $mform->addElement('select', 'personalizationtype', get_string('personalizationtype', 'local_kopere_trail'),
             $plugins->get_options(\local_kopere_trail\service\subplugin_manager::TYPE_PERSONALIZATION, true));
-        $configuration->add_provider_fields($mform, \local_kopere_trail\service\subplugin_manager::TYPE_PERSONALIZATION, 'personalizationtype', $currentdata);
+        $configuration->add_provider_fields(
+            $mform,
+            \local_kopere_trail\service\subplugin_manager::TYPE_PERSONALIZATION,
+            'personalizationtype',
+            $currentdata
+        );
 
         $mform->addElement('select', 'competencytype', get_string('competencytype', 'local_kopere_trail'),
             $plugins->get_options(\local_kopere_trail\service\subplugin_manager::TYPE_COMPETENCY, true));
-        $configuration->add_provider_fields($mform, \local_kopere_trail\service\subplugin_manager::TYPE_COMPETENCY, 'competencytype', $currentdata);
+        $configuration->add_provider_fields(
+            $mform,
+            \local_kopere_trail\service\subplugin_manager::TYPE_COMPETENCY,
+            'competencytype',
+            $currentdata
+        );
 
         $mform->addElement('static', 'prerequisiteinfo', get_string('prerequisites', 'local_kopere_trail'),
             get_string('prerequisites_edges_info', 'local_kopere_trail'));
@@ -86,6 +114,13 @@ class step_form extends \moodleform {
         $this->add_action_buttons(true, get_string('savechanges', 'local_kopere_trail'));
     }
 
+    /**
+     * Validates submitted form data.
+     *
+     * @param mixed $data The data.
+     * @param mixed $files The files.
+     * @return array The result.
+     */
     public function validation($data, $files): array {
         $errors = parent::validation($data, $files);
         if ((int)($data['points'] ?? 0) < 0) {

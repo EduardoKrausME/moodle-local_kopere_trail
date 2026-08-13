@@ -29,14 +29,34 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->libdir . '/externallib.php');
 
+/**
+ * Provides the search activities implementation.
+ */
 class search_activities extends \external_api {
+    /**
+     * Defines external function parameters.
+     *
+     * @return \external_function_parameters The result.
+     */
     public static function execute_parameters(): \external_function_parameters {
         return new \external_function_parameters([
             'query' => new \external_value(PARAM_RAW_TRIMMED, 'Search text'),
-            'modnames' => new \external_multiple_structure(new \external_value(PARAM_PLUGIN, 'Module name'), 'Allowed module names', VALUE_DEFAULT, []),
+            'modnames' => new \external_multiple_structure(
+                new \external_value(PARAM_PLUGIN, 'Module name'),
+                'Allowed module names',
+                VALUE_DEFAULT,
+                []
+            ),
         ]);
     }
 
+    /**
+     * Executes the external function.
+     *
+     * @param string $query The query.
+     * @param array $modnames The modnames.
+     * @return array The result.
+     */
     public static function execute(string $query, array $modnames = []): array {
         global $DB;
         $params = self::validate_parameters(self::execute_parameters(), [
@@ -75,7 +95,8 @@ class search_activities extends \external_api {
                       JOIN {{$module->name}} x ON x.id = cm.instance
                      WHERE cm.module = :moduleid
                        AND cm.deletioninprogress = 0
-                       AND (" . $DB->sql_like('x.name', ':activityname', false) . " OR " . $DB->sql_like('c.fullname', ':coursename', false) . ")
+                       AND (" . $DB->sql_like('x.name', ':activityname', false) . "\n"
+                           . " OR " . $DB->sql_like('c.fullname', ':coursename', false) . ")
                   ORDER BY c.fullname ASC, x.name ASC";
             $remaining = 30 - count($results);
             $records = $DB->get_records_sql($sql, [
@@ -86,7 +107,9 @@ class search_activities extends \external_api {
             foreach ($records as $record) {
                 $results[] = [
                     'id' => (int)$record->id,
-                    'label' => format_string($record->coursename) . ' / ' . format_string($record->activityname) . ' (' . $module->name . ')',
+                    'label' => format_string($record->coursename)
+                        . ' / ' . format_string($record->activityname)
+                        . ' (' . $module->name . ')',
                 ];
             }
         }
@@ -94,6 +117,11 @@ class search_activities extends \external_api {
         return array_slice($results, 0, 30);
     }
 
+    /**
+     * Defines the external function return structure.
+     *
+     * @return \external_multiple_structure The result.
+     */
     public static function execute_returns(): \external_multiple_structure {
         return new \external_multiple_structure(new \external_single_structure([
             'id' => new \external_value(PARAM_INT, 'Course module id'),

@@ -24,12 +24,29 @@
 
 namespace local_kopere_trail\service;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the enrolment service implementation.
+ */
 class enrolment_service {
+    /**
+     * Trails.
+     *
+     * @var \local_kopere_trail\repository\trail_repository
+     */
     private \local_kopere_trail\repository\trail_repository $trails;
+    /**
+     * Plugins.
+     *
+     * @var subplugin_manager
+     */
     private subplugin_manager $plugins;
 
+    /**
+     * Creates a new instance.
+     *
+     * @param \local_kopere_trail\repository\trail_repository|null $trails The trails.
+     * @param subplugin_manager|null $plugins The plugins.
+     */
     public function __construct(
         ?\local_kopere_trail\repository\trail_repository $trails = null,
         ?subplugin_manager $plugins = null
@@ -38,6 +55,11 @@ class enrolment_service {
         $this->plugins = $plugins ?? new subplugin_manager();
     }
 
+    /**
+     * Handles sync assignments.
+     *
+     * @return int The result.
+     */
     public function sync_assignments(): int {
         $count = 0;
         foreach ($this->trails->get_trailids_requiring_sync() as $trailid) {
@@ -46,6 +68,12 @@ class enrolment_service {
         return $count;
     }
 
+    /**
+     * Handles sync trail assignments.
+     *
+     * @param int $trailid The trailid.
+     * @return int The result.
+     */
     public function sync_trail_assignments(int $trailid): int {
         global $DB;
         $transaction = $DB->start_delegated_transaction();
@@ -88,6 +116,14 @@ class enrolment_service {
         return count($desired);
     }
 
+    /**
+     * Handles ensure access for available steps.
+     *
+     * @param array $steps The steps.
+     * @param array $stepstates The stepstates.
+     * @param int $userid The userid.
+     * @return void The result.
+     */
     public function ensure_access_for_available_steps(array $steps, array $stepstates, int $userid): void {
         foreach ($steps as $step) {
             $state = $stepstates[$step->id] ?? null;

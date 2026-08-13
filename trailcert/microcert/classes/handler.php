@@ -24,13 +24,26 @@
 
 namespace trailcert_microcert;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the handler implementation.
+ */
 class handler implements \local_kopere_trail\contract\cert_provider {
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
     public function get_name(): string {
         return get_string('pluginname', 'trailcert_microcert');
     }
 
+    /**
+     * Returns the certificate url.
+     *
+     * @param \stdClass $trail The trail.
+     * @param int $userid The userid.
+     * @return \moodle_url|null The result.
+     */
     public function get_certificate_url(\stdClass $trail, int $userid): ?\moodle_url {
         global $DB;
         $progress = $DB->get_record('local_kopere_trail_prog', [

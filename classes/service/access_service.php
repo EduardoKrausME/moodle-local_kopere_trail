@@ -24,15 +24,33 @@
 
 namespace local_kopere_trail\service;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the access service implementation.
+ */
 class access_service {
+    /**
+     * Trails.
+     *
+     * @var \local_kopere_trail\repository\trail_repository
+     */
     private \local_kopere_trail\repository\trail_repository $trails;
 
+    /**
+     * Creates a new instance.
+     *
+     * @param \local_kopere_trail\repository\trail_repository|null $trails The trails.
+     */
     public function __construct(?\local_kopere_trail\repository\trail_repository $trails = null) {
         $this->trails = $trails ?? new \local_kopere_trail\repository\trail_repository();
     }
 
+    /**
+     * Checks whether open.
+     *
+     * @param \stdClass $trail The trail.
+     * @param int|null $now The now.
+     * @return bool The result.
+     */
     public function is_open(\stdClass $trail, ?int $now = null): bool {
         $now = $now ?? time();
         if (empty($trail->visible)) {
@@ -47,6 +65,14 @@ class access_service {
         return true;
     }
 
+    /**
+     * Checks whether access.
+     *
+     * @param \stdClass $trail The trail.
+     * @param int $userid The userid.
+     * @param \context|null $context The context.
+     * @return bool The result.
+     */
     public function can_access(\stdClass $trail, int $userid, ?\context $context = null): bool {
         $context = $context ?? \context_system::instance();
         if (has_capability('local/kopere_trail:manage', $context, $userid)) {
@@ -61,6 +87,14 @@ class access_service {
         return $this->trails->has_active_enrolment((int)$trail->id, $userid);
     }
 
+    /**
+     * Handles require access.
+     *
+     * @param \stdClass $trail The trail.
+     * @param int $userid The userid.
+     * @param \context|null $context The context.
+     * @return void The result.
+     */
     public function require_access(\stdClass $trail, int $userid, ?\context $context = null): void {
         $context = $context ?? \context_system::instance();
         if (!$this->can_access($trail, $userid, $context)) {

@@ -24,11 +24,23 @@
 
 namespace local_kopere_trail\contract;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Defines the personalization provider contract.
+ */
 interface personalization_provider {
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
     public function get_name(): string;
 
+    /**
+     * Handles should show step.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return bool The result.
+     */
     public function should_show_step(\stdClass $step, int $userid): bool;
 }
-

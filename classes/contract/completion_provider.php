@@ -24,13 +24,32 @@
 
 namespace local_kopere_trail\contract;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Defines the completion provider contract.
+ */
 interface completion_provider {
+    /**
+     * Returns the display name.
+     *
+     * @return string The result.
+     */
     public function get_name(): string;
 
+    /**
+     * Checks whether complete manually.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return bool The result.
+     */
     public function can_complete_manually(\stdClass $step, int $userid): bool;
 
+    /**
+     * Returns the completion.
+     *
+     * @param \stdClass $step The step.
+     * @param int $userid The userid.
+     * @return array The result.
+     */
     public function get_completion(\stdClass $step, int $userid): array;
 }
-

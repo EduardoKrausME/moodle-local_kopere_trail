@@ -22,8 +22,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Handles local kopere trail extend navigation.
+ *
+ * @param global_navigation $navigation The navigation.
+ * @return void The result.
+ */
 function local_kopere_trail_extend_navigation(global_navigation $navigation): void {
     if (!isloggedin() || isguestuser()) {
         return;
@@ -42,6 +46,18 @@ function local_kopere_trail_extend_navigation(global_navigation $navigation): vo
     );
 }
 
+/**
+ * Handles local kopere trail pluginfile.
+ *
+ * @param mixed $course The course.
+ * @param mixed $cm The cm.
+ * @param context $context The context.
+ * @param string $filearea The filearea.
+ * @param array $args The args.
+ * @param bool $forcedownload The forcedownload.
+ * @param array $options The options.
+ * @return bool The result.
+ */
 function local_kopere_trail_pluginfile(
     $course,
     $cm,

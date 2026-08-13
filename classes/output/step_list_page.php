@@ -24,12 +24,38 @@
 
 namespace local_kopere_trail\output;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Provides the step list page implementation.
+ */
 class step_list_page implements \renderable, \templatable {
+    /**
+     * Trail.
+     *
+     * @var \stdClass
+     */
     private \stdClass $trail;
+    /**
+     * Steps.
+     *
+     * @var array
+     */
     private array $steps;
-    public function __construct(\stdClass $trail, array $steps) { $this->trail = $trail; $this->steps = $steps; }
+    /**
+     * Creates a new instance.
+     *
+     * @param \stdClass $trail The trail.
+     * @param array $steps The steps.
+     */
+    public function __construct(\stdClass $trail, array $steps) {
+        $this->trail = $trail;
+        $this->steps = $steps;
+    }
+    /**
+     * Exports data for a Mustache template.
+     *
+     * @param \renderer_base $output The output.
+     * @return array The result.
+     */
     public function export_for_template(\renderer_base $output): array {
         $items = [];
         $plugins = new \local_kopere_trail\service\subplugin_manager();
@@ -38,11 +64,21 @@ class step_list_page implements \renderable, \templatable {
             $items[] = [
                 'id' => (int)$step->id,
                 'name' => format_string($step->name),
-                'contenttype' => $plugins->get_plugin_label(\local_kopere_trail\service\subplugin_manager::TYPE_CONTENT, (string)$step->contenttype),
-                'completiontype' => $plugins->get_plugin_label(\local_kopere_trail\service\subplugin_manager::TYPE_COMPLETION, (string)$step->completiontype),
+                'contenttype' => $plugins->get_plugin_label(
+                    \local_kopere_trail\service\subplugin_manager::TYPE_CONTENT,
+                    (string)$step->contenttype
+                ),
+                'completiontype' => $plugins->get_plugin_label(
+                    \local_kopere_trail\service\subplugin_manager::TYPE_COMPLETION,
+                    (string)$step->completiontype
+                ),
                 'optional' => !empty($step->optional),
                 'visiblelabel' => !empty($step->visible) ? get_string('yes') : get_string('no'),
-                'editurl' => (new \moodle_url('/local/kopere_trail/step_edit.php', ['trailid' => $this->trail->id, 'id' => $step->id]))->out(false),
+                'editurl' => (new \moodle_url(
+                    '/local/kopere_trail/step_edit.php',
+                    ['trailid' => $this->trail->id,
+                    'id' => $step->id]
+                ))->out(false),
                 'moveupurl' => (new \moodle_url('/local/kopere_trail/move.php', $base + ['direction' => 'up']))->out(false),
                 'movedownurl' => (new \moodle_url('/local/kopere_trail/move.php', $base + ['direction' => 'down']))->out(false),
             ];

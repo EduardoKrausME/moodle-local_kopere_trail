@@ -29,7 +29,15 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 require_once($CFG->libdir . '/formslib.php');
 
+/**
+ * Provides the trail form implementation.
+ */
 class trail_form extends \moodleform {
+    /**
+     * Defines the form fields.
+     *
+     * @return void The result.
+     */
     protected function definition(): void {
         $mform = $this->_form;
         $plugins = new \local_kopere_trail\service\subplugin_manager();
@@ -56,7 +64,12 @@ class trail_form extends \moodleform {
 
         $mform->addElement('select', 'certtype', get_string('certtype', 'local_kopere_trail'),
             $plugins->get_options(\local_kopere_trail\service\subplugin_manager::TYPE_CERT, true));
-        $configuration->add_provider_fields($mform, \local_kopere_trail\service\subplugin_manager::TYPE_CERT, 'certtype', $currentdata);
+        $configuration->add_provider_fields(
+            $mform,
+            \local_kopere_trail\service\subplugin_manager::TYPE_CERT,
+            'certtype',
+            $currentdata
+        );
 
         $mform->addElement('select', 'gamificationtype', get_string('gamificationtype', 'local_kopere_trail'),
             $plugins->get_options(\local_kopere_trail\service\subplugin_manager::TYPE_GAMIFICATION, true));
@@ -64,6 +77,13 @@ class trail_form extends \moodleform {
         $this->add_action_buttons(true, get_string('savechanges', 'local_kopere_trail'));
     }
 
+    /**
+     * Validates submitted form data.
+     *
+     * @param mixed $data The data.
+     * @param mixed $files The files.
+     * @return array The result.
+     */
     public function validation($data, $files): array {
         $errors = parent::validation($data, $files);
         if (!empty($data['startdate']) && !empty($data['enddate']) && (int)$data['enddate'] < (int)$data['startdate']) {
