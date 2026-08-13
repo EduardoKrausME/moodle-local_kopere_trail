@@ -121,7 +121,7 @@ class progress_service {
             }
         }
 
-        $requiredsteps = array_values(array_filter($steps, static fn(\stdClass $step) : bool => empty($step->optional)));
+        $requiredsteps = array_values(array_filter($steps, static fn(\stdClass $step): bool => empty($step->optional)));
         $total = count($requiredsteps);
         $completed = 0;
         $currentstepid = 0;
