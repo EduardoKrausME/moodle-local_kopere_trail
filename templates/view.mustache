@@ -1,0 +1,99 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_kopere_trail/view
+
+    Example context (json):
+    {
+        Aqui tem que criar o context em inglês
+    }
+}}
+
+<div class="kopere-trail kopere-trail-view">
+    <div class="kopere-trail-hero">
+        <div>
+            <a class="kopere-trail-back" href="{{indexurl}}">{{#str}}myjourneys, local_kopere_trail{{/str}}</a>
+            <h2>{{name}}</h2>
+            <div class="kopere-trail-summary">{{{summary}}}</div>
+        </div>
+        <div class="kopere-trail-hero__progress">
+            <strong>{{percent}}%</strong>
+            <span>{{progressline}}</span>
+            <div class="kopere-trail-progress" aria-label="{{progressline}}">
+                <span style="width: {{percent}}%"></span>
+            </div>
+            {{#hasgamification}}<small>{{xp}} {{#str}}xp, local_kopere_trail{{/str}}</small>{{/hasgamification}}
+            {{#hascertificate}}<a class="btn btn-sm btn-outline-primary mt-2" href="{{certificateurl}}">{{#str}}viewcertificate, local_kopere_trail{{/str}}</a>{{/hascertificate}}
+        </div>
+    </div>
+
+    {{#canmanage}}
+        <div class="kopere-trail-admin-actions">
+            <a class="btn btn-sm btn-outline-secondary" href="{{stepsurl}}">{{#str}}steps, local_kopere_trail{{/str}}</a>
+            <a class="btn btn-sm btn-outline-secondary" href="{{reporturl}}">{{#str}}reports, local_kopere_trail{{/str}}</a>
+        </div>
+    {{/canmanage}}
+
+    {{#hassteps}}
+        <div class="kopere-trail-steps">
+            {{#steps}}
+                <article class="kopere-trail-step {{#completed}}is-completed{{/completed}} {{#locked}}is-locked{{/locked}}">
+                    <div class="kopere-trail-step__marker" aria-label="{{statuslabel}}" title="{{statuslabel}}">
+                        {{#completed}}✓{{/completed}}
+                        {{^completed}}
+                            {{#locked}}○{{/locked}}
+                            {{#available}}●{{/available}}
+                        {{/completed}}
+                    </div>
+                    <div class="kopere-trail-step__body">
+                        <div class="kopere-trail-step__meta">
+                            <span>{{contenttype}}</span>
+                            <span>{{completiontype}}</span>
+                            {{#optional}}<span>{{#str}}optionalstep, local_kopere_trail{{/str}}</span>{{/optional}}
+                            {{#required}}<span>{{#str}}requiredstep, local_kopere_trail{{/str}}</span>{{/required}}
+                        </div>
+                        <h3>{{name}}</h3>
+                        <div class="kopere-trail-step__description">{{{description}}}</div>
+                        {{#inline.html}}
+                            <div class="kopere-trail-step__inline">{{{inline.html}}}</div>
+                        {{/inline.html}}
+                        {{#hascompetencies}}
+                            <div class="kopere-trail-step__competencies">
+                                <strong>{{#str}}competencies, local_kopere_trail{{/str}}</strong>
+                                {{#competencies}}<span class="badge badge-light">{{name}}</span>{{/competencies}}
+                            </div>
+                        {{/hascompetencies}}
+                        <div class="kopere-trail-step__footer">
+                            <span class="kopere-trail-status">{{statuslabel}}</span>
+                            {{#estimatedtime}}<span class="kopere-trail-muted">{{estimatedtime}} min</span>{{/estimatedtime}}
+                            {{#showpoints}}<span class="kopere-trail-muted">{{points}} {{#str}}xp, local_kopere_trail{{/str}}</span>{{/showpoints}}
+                            {{#canlaunch}}<a class="btn btn-sm btn-primary" href="{{launchurl}}">{{#str}}launchstep, local_kopere_trail{{/str}}</a>{{/canlaunch}}
+                            {{#cancomplete}}<a class="btn btn-sm btn-outline-primary" href="{{completeurl}}">{{#str}}markcomplete, local_kopere_trail{{/str}}</a>{{/cancomplete}}
+                            {{#locked}}<span class="kopere-trail-muted">{{#str}}nextlocked, local_kopere_trail{{/str}}</span>{{/locked}}
+                        </div>
+                    </div>
+                </article>
+            {{/steps}}
+        </div>
+    {{/hassteps}}
+
+    {{^hassteps}}
+        <div class="kopere-trail-empty">
+            <p>{{#str}}nosteps, local_kopere_trail{{/str}}</p>
+        </div>
+    {{/hassteps}}
+</div>

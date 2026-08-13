@@ -1,0 +1,20 @@
+{
+    "subplugintypes": {
+        "trailcontent": "trailcontent",
+        "trailcompletion": "trailcompletion",
+        "trailprereq": "trailprereq",
+        "trailpersonalization": "trailpersonalization",
+        "trailcert": "trailcert",
+        "trailgamification": "trailgamification",
+        "trailcompetency": "trailcompetency"
+    },
+    "plugintypes": {
+        "trailcontent": "local/kopere_trail/trailcontent",
+        "trailcompletion": "local/kopere_trail/trailcompletion",
+        "trailprereq": "local/kopere_trail/trailprereq",
+        "trailpersonalization": "local/kopere_trail/trailpersonalization",
+        "trailcert": "local/kopere_trail/trailcert",
+        "trailgamification": "local/kopere_trail/trailgamification",
+        "trailcompetency": "local/kopere_trail/trailcompetency"
+    }
+}

@@ -1,0 +1,56 @@
+.kopere-trail {
+    color: #1f2937;
+}
+
+.kopere-trail__topbar,
+.kopere-trail-hero {
+    align-items: flex-start;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.kopere-trail__topbar h2,
+.kopere-trail-hero h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.kopere-trail-back,
+.kopere-trail-muted {
+    color: #64748b;
+    font-size: .9rem;
+}
+
+.kopere-trail-summary {
+    max-width: 760px;
+}
+
+.kopere-trail-empty {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.25rem;
+}
+
+.kopere-trail-actions,
+.kopere-trail-admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+@media (max-width: 768px) {
+    .kopere-trail__topbar,
+    .kopere-trail-hero {
+        display: block;
+    }
+
+    .kopere-trail__topbar .btn,
+    .kopere-trail-hero__progress {
+        margin-top: 1rem;
+    }
+}
+

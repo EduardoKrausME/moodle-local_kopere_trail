@@ -1,0 +1,40 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_kopere_trail/certificate
+
+    Example context (json):
+    {
+        Aqui tem que criar o context em inglês
+    }
+}}
+
+<div class="kopere-trail kopere-trail-certificate">
+    <div class="kopere-trail-certificate__sheet">
+        <div class="kopere-trail-certificate__eyebrow">{{#str}}microcertificate, local_kopere_trail{{/str}}</div>
+        <h2>{{#str}}certificate_title, local_kopere_trail{{/str}}</h2>
+        <p>{{#str}}certificate_student_intro, local_kopere_trail{{/str}}</p>
+        <h3>{{student}}</h3>
+        <p>{{#str}}certificate_completed_intro, local_kopere_trail{{/str}}</p>
+        <h4>{{trailname}}</h4>
+        <p>{{#str}}certificate_completed_on, local_kopere_trail{{/str}} <strong>{{completedon}}</strong></p>
+    </div>
+    <div class="kopere-trail-actions mt-3">
+        <button type="button" class="btn btn-primary" data-action="print-certificate">{{#str}}printcertificate, local_kopere_trail{{/str}}</button>
+        <a class="btn btn-outline-secondary" href="{{backurl}}">{{#str}}backtotrail, local_kopere_trail{{/str}}</a>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_kopere_trail/manage
+
+    Example context (json):
+    {
+        Aqui tem que criar o context em inglês
+    }
+}}
+
+<div class="kopere-trail kopere-trail-manage">
+    <div class="kopere-trail__topbar">
+        <h2>{{#str}}managetrails, local_kopere_trail{{/str}}</h2>
+        <a class="btn btn-primary" href="{{createurl}}">{{#str}}createtrail, local_kopere_trail{{/str}}</a>
+    </div>
+
+    {{#hastrails}}
+        <div class="table-responsive">
+            <table class="table kopere-trail-table">
+                <thead>
+                    <tr>
+                        <th>{{#str}}name, local_kopere_trail{{/str}}</th>
+                        <th>{{#str}}code, local_kopere_trail{{/str}}</th>
+                        <th>{{#str}}visible, local_kopere_trail{{/str}}</th>
+                        <th>{{#str}}actions, local_kopere_trail{{/str}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#trails}}
+                        <tr>
+                            <td><a href="{{viewurl}}">{{name}}</a></td>
+                            <td>{{code}}</td>
+                            <td>{{visiblelabel}}</td>
+                            <td class="kopere-trail-actions">
+                                <a class="btn btn-sm btn-outline-secondary" href="{{moveupurl}}" title="{{#str}}moveup, local_kopere_trail{{/str}}">↑</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{movedownurl}}" title="{{#str}}movedown, local_kopere_trail{{/str}}">↓</a>
+                                <a class="btn btn-sm btn-outline-primary" href="{{editurl}}">{{#str}}edit, local_kopere_trail{{/str}}</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{stepsurl}}">{{#str}}steps, local_kopere_trail{{/str}}</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{enrolurl}}">{{#str}}trailenrolments, local_kopere_trail{{/str}}</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{reporturl}}">{{#str}}reports, local_kopere_trail{{/str}}</a>
+                            </td>
+                        </tr>
+                    {{/trails}}
+                </tbody>
+            </table>
+        </div>
+    {{/hastrails}}
+
+    {{^hastrails}}
+        <div class="kopere-trail-empty">
+            <p>{{#str}}notrails, local_kopere_trail{{/str}}</p>
+        </div>
+    {{/hastrails}}
+</div>
+

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/kopere_trail/db" VERSION="2026081204" COMMENT="Kopere Trail tables">
+  <TABLES>
+    <TABLE NAME="local_kopere_trail" COMMENT="Learning trail definitions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="100"/>
+        <FIELD NAME="summary" TYPE="text"/>
+        <FIELD NAME="summaryformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="visible" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="startdate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="enddate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="config" TYPE="text"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="code_uix" UNIQUE="true" FIELDS="code"/>
+        <INDEX NAME="visible_ix" UNIQUE="false" FIELDS="visible"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_kopere_trail_step" COMMENT="Steps that compose a learning trail">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="trailid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="description" TYPE="text"/>
+        <FIELD NAME="descriptionformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="contenttype" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT="html"/>
+        <FIELD NAME="contentconfig" TYPE="text"/>
+        <FIELD NAME="completiontype" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT="manual"/>
+        <FIELD NAME="completionconfig" TYPE="text"/>
+        <FIELD NAME="prereqtype" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT="previous"/>
+        <FIELD NAME="prereqconfig" TYPE="text"/>
+        <FIELD NAME="personalizationtype" TYPE="char" LENGTH="100"/>
+        <FIELD NAME="personalizationconfig" TYPE="text"/>
+        <FIELD NAME="competencytype" TYPE="char" LENGTH="100"/>
+        <FIELD NAME="competencyconfig" TYPE="text"/>
+        <FIELD NAME="optional" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="visible" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="unlockmode" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="all"/>
+        <FIELD NAME="points" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="estimatedtime" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="trail_fk" TYPE="foreign" FIELDS="trailid" REFTABLE="local_kopere_trail" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="trail_sort_ix" UNIQUE="false" FIELDS="trailid, sortorder"/>
+        <INDEX NAME="contenttype_ix" UNIQUE="false" FIELDS="contenttype"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_kopere_trail_edge" COMMENT="Graph connections between trail steps">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="trailid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="fromstepid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="tostepid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="ruleplugin" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT="step"/>
+        <FIELD NAME="ruleconfig" TYPE="text"/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="trail_fk" TYPE="foreign" FIELDS="trailid" REFTABLE="local_kopere_trail" REFFIELDS="id"/>
+        <KEY NAME="fromstep_fk" TYPE="foreign" FIELDS="fromstepid" REFTABLE="local_kopere_trail_step" REFFIELDS="id"/>
+        <KEY NAME="tostep_fk" TYPE="foreign" FIELDS="tostepid" REFTABLE="local_kopere_trail_step" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="trail_from_ix" UNIQUE="false" FIELDS="trailid, fromstepid"/>
+        <INDEX NAME="trail_to_ix" UNIQUE="false" FIELDS="trailid, tostepid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_kopere_trail_assign" COMMENT="User and cohort trail assignments">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="trailid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="assigntype" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="user"/>
+        <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="active"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="trail_fk" TYPE="foreign" FIELDS="trailid" REFTABLE="local_kopere_trail" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="target_uix" UNIQUE="true" FIELDS="trailid, assigntype, instanceid"/>
+        <INDEX NAME="status_ix" UNIQUE="false" FIELDS="status"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_kopere_trail_enrol" COMMENT="User trail enrolments generated from assignments or manual inclusion">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="trailid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="source" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="manual"/>
+        <FIELD NAME="sourceid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="active"/>
+        <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timeend" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="trail_fk" TYPE="foreign" FIELDS="trailid" REFTABLE="local_kopere_trail" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="user_trail_uix" UNIQUE="true" FIELDS="trailid, userid"/>
+        <INDEX NAME="userid_ix" UNIQUE="false" FIELDS="userid"/>
+        <INDEX NAME="status_ix" UNIQUE="false" FIELDS="status"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_kopere_trail_enrolsrc" COMMENT="Assignment sources that keep a trail enrolment active">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="trailid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="assignmentid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="assigntype" TYPE="char" LENGTH="20" NOTNULL="true"/>
+        <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="trail_fk" TYPE="foreign" FIELDS="trailid" REFTABLE="local_kopere_trail" REFFIELDS="id"/>
+        <KEY NAME="assignment_fk" TYPE="foreign" FIELDS="assignmentid" REFTABLE="local_kopere_trail_assign" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="assignment_user_uix" UNIQUE="true" FIELDS="assignmentid, userid"/>
+        <INDEX NAME="trail_user_ix" UNIQUE="false" FIELDS="trailid, userid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_kopere_trail_prog" COMMENT="Consolidated user progress in a trail">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="trailid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="completedsteps" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="totalsteps" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="percent" TYPE="number" LENGTH="10" DECIMALS="2" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="notstarted"/>
+        <FIELD NAME="currentstepid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="xp" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timecompleted" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="trail_fk" TYPE="foreign" FIELDS="trailid" REFTABLE="local_kopere_trail" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="user_trail_uix" UNIQUE="true" FIELDS="trailid, userid"/>
+        <INDEX NAME="userid_ix" UNIQUE="false" FIELDS="userid"/>
+        <INDEX NAME="status_ix" UNIQUE="false" FIELDS="status"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_kopere_trail_progstep" COMMENT="User progress for each trail step">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="trailid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="stepid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="locked"/>
+        <FIELD NAME="completionstate" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="progresspercent" TYPE="number" LENGTH="10" DECIMALS="2" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timeavailable" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timestarted" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timecompleted" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="source" TYPE="char" LENGTH="100"/>
+        <FIELD NAME="details" TYPE="text"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="trail_fk" TYPE="foreign" FIELDS="trailid" REFTABLE="local_kopere_trail" REFFIELDS="id"/>
+        <KEY NAME="step_fk" TYPE="foreign" FIELDS="stepid" REFTABLE="local_kopere_trail_step" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="user_step_uix" UNIQUE="true" FIELDS="stepid, userid"/>
+        <INDEX NAME="trail_user_ix" UNIQUE="false" FIELDS="trailid, userid"/>
+        <INDEX NAME="status_ix" UNIQUE="false" FIELDS="status"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_kopere_trail_event" COMMENT="Audit log for trail progress events">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="trailid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="stepid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+        <FIELD NAME="eventname" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="details" TYPE="text"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="trail_fk" TYPE="foreign" FIELDS="trailid" REFTABLE="local_kopere_trail" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="trail_user_ix" UNIQUE="false" FIELDS="trailid, userid"/>
+        <INDEX NAME="eventname_ix" UNIQUE="false" FIELDS="eventname"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
+

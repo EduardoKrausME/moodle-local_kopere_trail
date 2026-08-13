@@ -1,0 +1,37 @@
+.kopere-trail-progress {
+    background: #e2e8f0;
+    border-radius: 999px;
+    height: .65rem;
+    overflow: hidden;
+    width: 100%;
+}
+
+.kopere-trail-progress span {
+    background: linear-gradient(90deg, #0f5ead, #2f80ed);
+    display: block;
+    height: 100%;
+}
+
+.kopere-trail-progress--small {
+    display: inline-block;
+    margin-right: .4rem;
+    max-width: 120px;
+    vertical-align: middle;
+}
+
+.kopere-trail-hero__progress {
+    min-width: 260px;
+}
+
+.kopere-trail-hero__progress strong {
+    color: #0f5ead;
+    display: block;
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.kopere-trail-hero__progress span {
+    display: block;
+    margin: .35rem 0 .75rem;
+}
+

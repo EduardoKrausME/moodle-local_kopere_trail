@@ -1,0 +1,239 @@
+.kopere-trail {
+  color: #1f2937;
+}
+
+.kopere-trail__topbar,
+.kopere-trail-hero {
+  align-items: flex-start;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.kopere-trail__topbar h2,
+.kopere-trail-hero h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.kopere-trail-back,
+.kopere-trail-muted {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.kopere-trail-summary {
+  max-width: 760px;
+}
+
+.kopere-trail-empty {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.kopere-trail-actions,
+.kopere-trail-admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .kopere-trail__topbar,
+  .kopere-trail-hero {
+    display: block;
+  }
+  .kopere-trail__topbar .btn,
+  .kopere-trail-hero__progress {
+    margin-top: 1rem;
+  }
+}
+.kopere-trail-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.kopere-trail-card,
+.kopere-trail-step,
+.kopere-trail-hero__progress {
+  background: #fff;
+  border: 1px solid #dbe4ee;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.kopere-trail-card__header,
+.kopere-trail-step__footer,
+.kopere-trail-step__meta {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.kopere-trail-card h3,
+.kopere-trail-step h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+.kopere-trail-steps {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.kopere-trail-step {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 2.25rem 1fr;
+}
+
+.kopere-trail-step.is-locked {
+  background: #f8fafc;
+}
+
+.kopere-trail-step__marker {
+  align-items: center;
+  background: #eaf3ff;
+  border-radius: 999px;
+  color: #0f5ead;
+  display: flex;
+  font-weight: 700;
+  height: 2.25rem;
+  justify-content: center;
+  width: 2.25rem;
+}
+
+.kopere-trail-step.is-completed .kopere-trail-step__marker {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.kopere-trail-step.is-locked .kopere-trail-step__marker {
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+.kopere-trail-step__meta span,
+.kopere-trail-status {
+  background: #eef6ff;
+  border-radius: 999px;
+  color: #075985;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+}
+
+.kopere-trail-step__description p:last-child,
+.kopere-trail-card__summary p:last-child {
+  margin-bottom: 0;
+}
+
+.kopere-trail-step__competencies {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.kopere-trail-certificate__sheet {
+  background: #fff;
+  border: 1px solid #d9dee7;
+  margin: 2rem auto;
+  max-width: 900px;
+  padding: 4rem;
+  text-align: center;
+}
+
+.kopere-trail-certificate__eyebrow {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.kopere-trail-certificate__sheet h3 {
+  font-size: 2rem;
+  margin: 1.5rem 0;
+}
+
+.kopere-trail-certificate__sheet h4 {
+  font-size: 1.5rem;
+  margin: 1rem 0;
+}
+
+@media print {
+  .kopere-trail-certificate .kopere-trail-actions,
+  .navbar,
+  .secondary-navigation,
+  #page-header {
+    display: none !important;
+  }
+  .kopere-trail-certificate__sheet {
+    border: 0;
+    margin: 0;
+    max-width: none;
+    padding: 2rem;
+  }
+}
+.kopere-trail-progress {
+  background: #e2e8f0;
+  border-radius: 999px;
+  height: 0.65rem;
+  overflow: hidden;
+  width: 100%;
+}
+
+.kopere-trail-progress span {
+  background: linear-gradient(90deg, #0f5ead, #2f80ed);
+  display: block;
+  height: 100%;
+}
+
+.kopere-trail-progress--small {
+  display: inline-block;
+  margin-right: 0.4rem;
+  max-width: 120px;
+  vertical-align: middle;
+}
+
+.kopere-trail-hero__progress {
+  min-width: 260px;
+}
+
+.kopere-trail-hero__progress strong {
+  color: #0f5ead;
+  display: block;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.kopere-trail-hero__progress span {
+  display: block;
+  margin: 0.35rem 0 0.75rem;
+}
+
+.kopere-trail-table {
+  background: #fff;
+  border: 1px solid #dbe4ee;
+}
+
+.kopere-trail-table th {
+  background: #f8fafc;
+  color: #334155;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+}
+
+.kopere-trail-table td,
+.kopere-trail-table th {
+  vertical-align: middle;
+}
+
+/*# sourceMappingURL=styles.css.map */
