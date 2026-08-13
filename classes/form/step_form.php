@@ -102,8 +102,8 @@ class step_form extends \moodleform {
             'all' => get_string('unlockmode_all', 'local_kopere_trail'),
             'any' => get_string('unlockmode_any', 'local_kopere_trail'),
         ]);
-        $mform->addElement('advcheckbox', 'optional', get_string('optional', 'local_kopere_trail'));
-        $mform->addElement('advcheckbox', 'visible', get_string('visible', 'local_kopere_trail'));
+        $mform->addElement('selectyesno', 'optional', get_string('optional', 'local_kopere_trail'));
+        $mform->addElement('selectyesno', 'visible', get_string('visible', 'local_kopere_trail'));
         $mform->setDefault('visible', 1);
         $mform->addElement('text', 'points', get_string('points', 'local_kopere_trail'));
         $mform->setType('points', PARAM_INT);

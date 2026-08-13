@@ -57,7 +57,7 @@ class trail_form extends \moodleform {
             'context' => \context_system::instance(),
         ]);
         $mform->setType('summary_editor', PARAM_RAW);
-        $mform->addElement('advcheckbox', 'visible', get_string('visible', 'local_kopere_trail'));
+        $mform->addElement('selectyesno', 'visible', get_string('visible', 'local_kopere_trail'));
         $mform->setDefault('visible', 1);
         $mform->addElement('date_time_selector', 'startdate', get_string('startdate', 'local_kopere_trail'), ['optional' => true]);
         $mform->addElement('date_time_selector', 'enddate', get_string('enddate', 'local_kopere_trail'), ['optional' => true]);
