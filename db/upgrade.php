@@ -96,7 +96,6 @@ function xmldb_local_kopere_trail_upgrade(int $oldversion): bool {
         upgrade_plugin_savepoint(true, 2026081204, 'local', 'kopere_trail');
     }
 
-
     if ($oldversion < 2026100300) {
         $trailtable = new xmldb_table('local_kopere_trail');
         foreach ([
