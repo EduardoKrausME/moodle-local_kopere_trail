@@ -27,7 +27,7 @@
             <h2>{{#str}}myjourneys, local_kopere_trail{{/str}}</h2>
         </div>
         {{#canmanage}}
-            <a class="btn btn-outline-primary" href="{{manageurl}}">{{#str}}gotomanage, local_kopere_trail{{/str}}</a>
+            <a class="btn btn-outline-primary" href="{{{manageurl}}}">{{#str}}gotomanage, local_kopere_trail{{/str}}</a>
         {{/canmanage}}
     </div>
 
@@ -36,7 +36,7 @@
             {{#trails}}
                 <article class="kopere-trail-card">
                     <div class="kopere-trail-card__header">
-                        <h3><a href="{{url}}">{{name}}</a></h3>
+                        <h3><a href="{{{url}}}">{{name}}</a></h3>
                         <span class="kopere-trail-status">{{status}}</span>
                     </div>
                     <div class="kopere-trail-card__summary">{{{summary}}}</div>
@@ -44,7 +44,7 @@
                         <span style="width: {{percentrounded}}%"></span>
                     </div>
                     <p class="kopere-trail-muted">{{progressline}}</p>
-                    <a class="btn btn-primary" href="{{url}}">{{#str}}view, local_kopere_trail{{/str}}</a>
+                    <a class="btn btn-primary" href="{{{url}}}">{{#str}}view, local_kopere_trail{{/str}}</a>
                 </article>
             {{/trails}}
         </div>

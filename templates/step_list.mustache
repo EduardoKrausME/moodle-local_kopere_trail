@@ -24,12 +24,12 @@
 <div class="kopere-trail kopere-trail-steps-admin">
     <div class="kopere-trail__topbar">
         <div>
-            <a class="kopere-trail-back" href="{{manageurl}}">{{#str}}backtomanage, local_kopere_trail{{/str}}</a>
+            <a class="kopere-trail-back" href="{{{manageurl}}}">{{#str}}backtomanage, local_kopere_trail{{/str}}</a>
             <h2>{{trailname}}</h2>
         </div>
         <div class="kopere-trail-actions">
-            <a class="btn btn-outline-secondary" href="{{edgesurl}}">{{#str}}trailedges, local_kopere_trail{{/str}}</a>
-            <a class="btn btn-primary" href="{{createurl}}">{{#str}}createstep, local_kopere_trail{{/str}}</a>
+            <a class="btn btn-outline-secondary" href="{{{edgesurl}}}">{{#str}}trailedges, local_kopere_trail{{/str}}</a>
+            <a class="btn btn-primary" href="{{{createurl}}}">{{#str}}createstep, local_kopere_trail{{/str}}</a>
         </div>
     </div>
 
@@ -55,9 +55,9 @@
                             <td>{{#optional}}{{#str}}yes{{/str}}{{/optional}}{{^optional}}{{#str}}no{{/str}}{{/optional}}</td>
                             <td>{{visiblelabel}}</td>
                             <td class="kopere-trail-actions">
-                                <a class="btn btn-sm btn-outline-secondary" href="{{moveupurl}}" title="{{#str}}moveup, local_kopere_trail{{/str}}">↑</a>
-                                <a class="btn btn-sm btn-outline-secondary" href="{{movedownurl}}" title="{{#str}}movedown, local_kopere_trail{{/str}}">↓</a>
-                                <a class="btn btn-sm btn-outline-primary" href="{{editurl}}">{{#str}}edit, local_kopere_trail{{/str}}</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{{moveupurl}}}" title="{{#str}}moveup, local_kopere_trail{{/str}}">↑</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{{movedownurl}}}" title="{{#str}}movedown, local_kopere_trail{{/str}}">↓</a>
+                                <a class="btn btn-sm btn-outline-primary" href="{{{editurl}}}">{{#str}}edit, local_kopere_trail{{/str}}</a>
                             </td>
                         </tr>
                     {{/steps}}

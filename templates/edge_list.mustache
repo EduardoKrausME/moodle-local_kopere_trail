@@ -24,10 +24,10 @@
 <div class="kopere-trail kopere-trail-edges-admin">
     <div class="kopere-trail__topbar">
         <div>
-            <a class="kopere-trail-back" href="{{stepsurl}}">{{#str}}trailsteps, local_kopere_trail{{/str}}</a>
+            <a class="kopere-trail-back" href="{{{stepsurl}}}">{{#str}}trailsteps, local_kopere_trail{{/str}}</a>
             <h2>{{trailname}}</h2>
         </div>
-        <a class="btn btn-primary" href="{{createurl}}">{{#str}}createedge, local_kopere_trail{{/str}}</a>
+        <a class="btn btn-primary" href="{{{createurl}}}">{{#str}}createedge, local_kopere_trail{{/str}}</a>
     </div>
 
     {{#hasedges}}
@@ -48,9 +48,9 @@
                             <td>{{tostep}}</td>
                             <td>{{ruleplugin}}</td>
                             <td class="kopere-trail-actions">
-                                <a class="btn btn-sm btn-outline-secondary" href="{{moveupurl}}" title="{{#str}}moveup, local_kopere_trail{{/str}}">↑</a>
-                                <a class="btn btn-sm btn-outline-secondary" href="{{movedownurl}}" title="{{#str}}movedown, local_kopere_trail{{/str}}">↓</a>
-                                <a class="btn btn-sm btn-outline-primary" href="{{editurl}}">{{#str}}edit, local_kopere_trail{{/str}}</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{{moveupurl}}}" title="{{#str}}moveup, local_kopere_trail{{/str}}">↑</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{{movedownurl}}}" title="{{#str}}movedown, local_kopere_trail{{/str}}">↓</a>
+                                <a class="btn btn-sm btn-outline-primary" href="{{{editurl}}}">{{#str}}edit, local_kopere_trail{{/str}}</a>
                             </td>
                         </tr>
                     {{/edges}}

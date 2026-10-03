@@ -24,7 +24,7 @@
 <div class="kopere-trail kopere-trail-manage">
     <div class="kopere-trail__topbar">
         <h2>{{#str}}managetrails, local_kopere_trail{{/str}}</h2>
-        <a class="btn btn-primary" href="{{createurl}}">{{#str}}createtrail, local_kopere_trail{{/str}}</a>
+        <a class="btn btn-primary" href="{{{createurl}}}">{{#str}}createtrail, local_kopere_trail{{/str}}</a>
     </div>
 
     {{#hastrails}}
@@ -41,16 +41,16 @@
                 <tbody>
                     {{#trails}}
                         <tr>
-                            <td><a href="{{viewurl}}">{{name}}</a></td>
+                            <td><a href="{{{viewurl}}}">{{name}}</a></td>
                             <td>{{code}}</td>
                             <td>{{visiblelabel}}</td>
                             <td class="kopere-trail-actions">
-                                <a class="btn btn-sm btn-outline-secondary" href="{{moveupurl}}" title="{{#str}}moveup, local_kopere_trail{{/str}}">↑</a>
-                                <a class="btn btn-sm btn-outline-secondary" href="{{movedownurl}}" title="{{#str}}movedown, local_kopere_trail{{/str}}">↓</a>
-                                <a class="btn btn-sm btn-outline-primary" href="{{editurl}}">{{#str}}edit, local_kopere_trail{{/str}}</a>
-                                <a class="btn btn-sm btn-outline-secondary" href="{{stepsurl}}">{{#str}}steps, local_kopere_trail{{/str}}</a>
-                                <a class="btn btn-sm btn-outline-secondary" href="{{enrolurl}}">{{#str}}trailenrolments, local_kopere_trail{{/str}}</a>
-                                <a class="btn btn-sm btn-outline-secondary" href="{{reporturl}}">{{#str}}reports, local_kopere_trail{{/str}}</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{{moveupurl}}}" title="{{#str}}moveup, local_kopere_trail{{/str}}">↑</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{{movedownurl}}}" title="{{#str}}movedown, local_kopere_trail{{/str}}">↓</a>
+                                <a class="btn btn-sm btn-outline-primary" href="{{{editurl}}}">{{#str}}edit, local_kopere_trail{{/str}}</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{{stepsurl}}}">{{#str}}steps, local_kopere_trail{{/str}}</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{{enrolurl}}}">{{#str}}trailenrolments, local_kopere_trail{{/str}}</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{{reporturl}}}">{{#str}}reports, local_kopere_trail{{/str}}</a>
                             </td>
                         </tr>
                     {{/trails}}
