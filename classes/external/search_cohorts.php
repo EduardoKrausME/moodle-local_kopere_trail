@@ -24,7 +24,7 @@
 
 namespace local_kopere_trail\external;
 
-defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die;
 
 global $CFG;
 require_once($CFG->libdir . '/externallib.php');
