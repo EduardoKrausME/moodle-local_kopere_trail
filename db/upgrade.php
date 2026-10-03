@@ -96,5 +96,37 @@ function xmldb_local_kopere_trail_upgrade(int $oldversion): bool {
         upgrade_plugin_savepoint(true, 2026081204, 'local', 'kopere_trail');
     }
 
+
+    if ($oldversion < 2026100300) {
+        $trailtable = new xmldb_table('local_kopere_trail');
+        foreach ([
+            new xmldb_field('code', XMLDB_TYPE_CHAR, '100', null, false, false, null, 'name'),
+            new xmldb_field('summary', XMLDB_TYPE_TEXT, null, null, false, false, null, 'code'),
+            new xmldb_field('config', XMLDB_TYPE_TEXT, null, null, false, false, null, 'enddate'),
+        ] as $field) {
+            $dbman->change_field_notnull($trailtable, $field);
+        }
+
+        $steptable = new xmldb_table('local_kopere_trail_step');
+        foreach ([
+            new xmldb_field('description', XMLDB_TYPE_TEXT, null, null, false, false, null, 'name'),
+            new xmldb_field('contentconfig', XMLDB_TYPE_TEXT, null, null, false, false, null, 'contenttype'),
+            new xmldb_field('completionconfig', XMLDB_TYPE_TEXT, null, null, false, false, null, 'completiontype'),
+            new xmldb_field('prereqconfig', XMLDB_TYPE_TEXT, null, null, false, false, null, 'prereqtype'),
+            new xmldb_field('personalizationtype', XMLDB_TYPE_CHAR, '100', null, false, false, null, 'prereqconfig'),
+            new xmldb_field('personalizationconfig', XMLDB_TYPE_TEXT, null, null, false, false, null, 'personalizationtype'),
+            new xmldb_field('competencytype', XMLDB_TYPE_CHAR, '100', null, false, false, null, 'personalizationconfig'),
+            new xmldb_field('competencyconfig', XMLDB_TYPE_TEXT, null, null, false, false, null, 'competencytype'),
+        ] as $field) {
+            $dbman->change_field_notnull($steptable, $field);
+        }
+
+        $edgetable = new xmldb_table('local_kopere_trail_edge');
+        $ruleconfig = new xmldb_field('ruleconfig', XMLDB_TYPE_TEXT, null, null, false, false, null, 'ruleplugin');
+        $dbman->change_field_notnull($edgetable, $ruleconfig);
+
+        upgrade_plugin_savepoint(true, 2026100300, 'local', 'kopere_trail');
+    }
+
     return true;
 }

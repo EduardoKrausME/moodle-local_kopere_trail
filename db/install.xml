@@ -7,14 +7,14 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="code" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="summary" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="summary" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="summaryformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
         <FIELD NAME="visible" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
         <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="startdate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="enddate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="config" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="config" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
@@ -31,18 +31,18 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="trailid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="description" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="descriptionformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
         <FIELD NAME="contenttype" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT="html" SEQUENCE="false"/>
-        <FIELD NAME="contentconfig" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="contentconfig" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="completiontype" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT="manual" SEQUENCE="false"/>
-        <FIELD NAME="completionconfig" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="completionconfig" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="prereqtype" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT="previous" SEQUENCE="false"/>
-        <FIELD NAME="prereqconfig" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="personalizationtype" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="personalizationconfig" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="competencytype" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="competencyconfig" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="prereqconfig" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="personalizationtype" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="personalizationconfig" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="competencytype" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="competencyconfig" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="optional" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="visible" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false"/>
         <FIELD NAME="unlockmode" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="all" SEQUENCE="false"/>
@@ -68,7 +68,7 @@
         <FIELD NAME="fromstepid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="tostepid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="ruleplugin" TYPE="char" LENGTH="100" NOTNULL="true" DEFAULT="step" SEQUENCE="false"/>
-        <FIELD NAME="ruleconfig" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="ruleconfig" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
