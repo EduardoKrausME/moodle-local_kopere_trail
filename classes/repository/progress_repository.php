@@ -41,7 +41,7 @@ class progress_repository {
         $record = $DB->get_record('local_kopere_trail_prog', [
             'trailid' => $trailid,
             'userid' => $userid,
-        ], '*', IGNORE_MISSING);
+        ]);
 
         return $record ?: null;
     }
@@ -78,7 +78,7 @@ class progress_repository {
         $record = $DB->get_record('local_kopere_trail_progstep', [
             'stepid' => $stepid,
             'userid' => $userid,
-        ], '*', IGNORE_MISSING);
+        ]);
 
         return $record ?: null;
     }

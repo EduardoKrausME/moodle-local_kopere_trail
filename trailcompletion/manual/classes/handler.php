@@ -61,7 +61,7 @@ class handler implements \local_kopere_trail\contract\completion_provider {
         $progress = $DB->get_record('local_kopere_trail_progstep', [
             'stepid' => $step->id,
             'userid' => $userid,
-        ], '*', IGNORE_MISSING);
+        ]);
 
         $completed = $progress && (int)$progress->completionstate === 1;
         return [

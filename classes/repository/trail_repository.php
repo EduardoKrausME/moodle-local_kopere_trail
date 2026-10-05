@@ -276,7 +276,7 @@ class trail_repository {
      */
     public function get_enrolment(int $trailid, int $userid): ?\stdClass {
         global $DB;
-        $record = $DB->get_record('local_kopere_trail_enrol', ['trailid' => $trailid, 'userid' => $userid], '*', IGNORE_MISSING);
+        $record = $DB->get_record('local_kopere_trail_enrol', ['trailid' => $trailid, 'userid' => $userid]);
         return $record ?: null;
     }
 
@@ -396,7 +396,7 @@ class trail_repository {
             'trailid' => $record->trailid,
             'assigntype' => $record->assigntype,
             'instanceid' => $record->instanceid,
-        ], '*', IGNORE_MISSING);
+        ]);
         if ($existing) {
             $record->id = (int)$existing->id;
             $DB->update_record('local_kopere_trail_assign', $record);
@@ -430,7 +430,7 @@ class trail_repository {
         $existing = $DB->get_record('local_kopere_trail_enrolsrc', [
             'assignmentid' => (int)$assignment->id,
             'userid' => $userid,
-        ], '*', IGNORE_MISSING);
+        ]);
         $now = time();
         if ($existing) {
             $existing->trailid = $trailid;
