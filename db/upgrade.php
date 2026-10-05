@@ -98,8 +98,22 @@ function xmldb_local_kopere_trail_upgrade(int $oldversion): bool {
 
     if ($oldversion < 2026100300) {
         $trailtable = new xmldb_table('local_kopere_trail');
+
+        // The code field is used by a unique index, so temporarily remove the
+        // index before changing the field definition and recreate it afterwards.
+        $codeindex = new xmldb_index('code_uix', XMLDB_INDEX_UNIQUE, ['code']);
+        if ($dbman->index_exists($trailtable, $codeindex)) {
+            $dbman->drop_index($trailtable, $codeindex);
+        }
+
+        $codefield = new xmldb_field('code', XMLDB_TYPE_CHAR, '100', null, false, false, null, 'name');
+        $dbman->change_field_notnull($trailtable, $codefield);
+
+        if (!$dbman->index_exists($trailtable, $codeindex)) {
+            $dbman->add_index($trailtable, $codeindex);
+        }
+
         foreach ([
-            new xmldb_field('code', XMLDB_TYPE_CHAR, '100', null, false, false, null, 'name'),
             new xmldb_field('summary', XMLDB_TYPE_TEXT, null, null, false, false, null, 'code'),
             new xmldb_field('config', XMLDB_TYPE_TEXT, null, null, false, false, null, 'enddate'),
         ] as $field) {
@@ -125,6 +139,10 @@ function xmldb_local_kopere_trail_upgrade(int $oldversion): bool {
         $dbman->change_field_notnull($edgetable, $ruleconfig);
 
         upgrade_plugin_savepoint(true, 2026100300, 'local', 'kopere_trail');
+    }
+
+    if ($oldversion < 2026100500) {
+        upgrade_plugin_savepoint(true, 2026100500, 'local', 'kopere_trail');
     }
 
     return true;
