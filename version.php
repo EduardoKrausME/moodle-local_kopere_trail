@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2026100500;
+$plugin->version = 2026100501;
 $plugin->release = '2.2.3';
 $plugin->component = 'local_kopere_trail';
 $plugin->requires = 2024042200;
