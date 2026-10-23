@@ -2,15 +2,18 @@
 # ingests and hash-pins it at each tagged release. Listing for local_kopere_trail.
 
 name: "kopere_trail"
-summary: "Identify kopere_trail and find opportunities to improve performance."
+summary: "Create and manage learning trails across Moodle courses, activities and content."
 description: |
-  Identify kopere_trail and find opportunities to improve performance.
+  Kopere Trail organizes Moodle courses, activities, external links, inline
+  HTML and H5P into learning paths with prerequisites, completion criteria,
+  progress tracking, personalization and micro-certificates.
 
-  Supported Moodle versions in the supplied plugin list: 3.9 - 5.0.
+  Moodle 4.4 or later is required by version.php. The plugin targets
+  Moodle 4.5 LTS and the Moodle 5.x series.
 
 labels:
   - fully-free
-category: "reports"
+category: "learning"
 links:
   docs: https://github.com/EduardoKrausME/moodle-local_kopere_trail#readme
   issues: https://github.com/EduardoKrausME/moodle-local_kopere_trail/issues

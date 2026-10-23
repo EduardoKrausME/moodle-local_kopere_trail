@@ -25,3 +25,4 @@
 defined('MOODLE_INTERNAL') || die;
 
 $string['pluginname'] = 'Micro-certification';
+$string['privacy:metadata'] = 'This trail subplugin stores no personal data of its own. User enrolment, progress and audit records are managed by the Kopere Trail parent plugin.';

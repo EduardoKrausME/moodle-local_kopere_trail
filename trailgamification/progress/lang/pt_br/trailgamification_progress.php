@@ -25,3 +25,4 @@
 defined('MOODLE_INTERNAL') || die;
 
 $string['pluginname'] = 'Progresso pessoal';
+$string['privacy:metadata'] = 'Este subplugin de trilhas não armazena dados pessoais próprios. Matrículas, progresso e registros de auditoria são gerenciados pelo plugin principal Kopere Trail.';

@@ -57,7 +57,6 @@ class handler implements \local_kopere_trail\contract\configurable_provider, \lo
     public function add_configuration_fields(\MoodleQuickForm $mform, string $selectorfield, ?\stdClass $currentdata = null): void {
         $mform->addElement('editor', 'contenthtml', get_string('contenthtml', 'local_kopere_trail'), null, [
             'maxfiles' => 0,
-            'trusttext' => true,
             'context' => \context_system::instance(),
         ]);
         $mform->setType('contenthtml', PARAM_RAW);
@@ -144,7 +143,7 @@ class handler implements \local_kopere_trail\contract\configurable_provider, \lo
         return [
             'html' => format_text($html, (int)($config['format'] ?? FORMAT_HTML), [
                 'context' => \context_system::instance(),
-                'trusted' => true,
+                'trusted' => false,
             ]),
         ];
     }

@@ -29,7 +29,8 @@ namespace local_kopere_trail\privacy;
  */
 class provider implements
     \core_privacy\local\metadata\provider,
-    \core_privacy\local\request\plugin\provider {
+    \core_privacy\local\request\plugin\provider,
+    \core_privacy\local\request\core_userlist_provider {
     /**
      * Returns the metadata.
      *
@@ -66,6 +67,21 @@ class provider implements
             'progresspercent' => 'privacy:metadata:progresspercent',
         ], 'privacy:metadata:stepprogress');
 
+        $collection->add_database_table("local_kopere_trail_assign", [
+            "trailid" => "privacy:metadata:trailid",
+            "assigntype" => "privacy:metadata:assignmenttype",
+            "instanceid" => "privacy:metadata:assignmenttarget",
+            "status" => "privacy:metadata:status",
+        ], "privacy:metadata:assignment");
+
+        $collection->add_database_table("local_kopere_trail_event", [
+            "trailid" => "privacy:metadata:trailid",
+            "stepid" => "privacy:metadata:stepid",
+            "userid" => "privacy:metadata:userid",
+            "eventname" => "privacy:metadata:eventname",
+            "details" => "privacy:metadata:eventdetails",
+        ], "privacy:metadata:event");
+
         return $collection;
     }
 
@@ -91,6 +107,37 @@ class provider implements
         }
 
         return $contextlist;
+    }
+
+    /**
+     * Lists users whose trail data belongs to the supplied context.
+     *
+     * @param \core_privacy\local\request\userlist $userlist User list to populate.
+     * @return void
+     */
+    public static function get_users_in_context(\core_privacy\local\request\userlist $userlist): void {
+        if ($userlist->get_context()->contextlevel !== CONTEXT_SYSTEM) {
+            return;
+        }
+
+        $usertables = [
+            "local_kopere_trail_enrol",
+            "local_kopere_trail_enrolsrc",
+            "local_kopere_trail_prog",
+            "local_kopere_trail_progstep",
+            "local_kopere_trail_event",
+        ];
+        foreach ($usertables as $table) {
+            $userlist->add_from_sql("userid", "SELECT DISTINCT userid FROM {{$table}}", []);
+        }
+
+        $userlist->add_from_sql(
+            "userid",
+            "SELECT DISTINCT instanceid AS userid
+               FROM {local_kopere_trail_assign}
+              WHERE assigntype = :assigntype",
+            ["assigntype" => "user"]
+        );
     }
 
     /**
@@ -145,6 +192,42 @@ class provider implements
         $DB->delete_records('local_kopere_trail_progstep');
         $DB->delete_records('local_kopere_trail_event');
         $DB->delete_records('local_kopere_trail_assign', ['assigntype' => 'user']);
+    }
+
+    /**
+     * Deletes data belonging to approved users in the system context.
+     *
+     * @param \core_privacy\local\request\approved_userlist $userlist Approved users and context.
+     * @return void
+     */
+    public static function delete_data_for_users(\core_privacy\local\request\approved_userlist $userlist): void {
+        global $DB;
+
+        if ($userlist->get_context()->contextlevel !== CONTEXT_SYSTEM) {
+            return;
+        }
+
+        $userids = $userlist->get_userids();
+        if (empty($userids)) {
+            return;
+        }
+
+        [$insql, $params] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, "privacyuserid");
+        foreach ([
+            "local_kopere_trail_enrolsrc",
+            "local_kopere_trail_enrol",
+            "local_kopere_trail_prog",
+            "local_kopere_trail_progstep",
+            "local_kopere_trail_event",
+        ] as $table) {
+            $DB->delete_records_select($table, "userid $insql", $params);
+        }
+
+        $DB->delete_records_select(
+            "local_kopere_trail_assign",
+            "assigntype = :assigntype AND instanceid $insql",
+            ["assigntype" => "user"] + $params
+        );
     }
 
     /**
