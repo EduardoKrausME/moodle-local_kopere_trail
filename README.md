@@ -4,10 +4,6 @@ Camada de trilhas de aprendizagem acima do Moodle.
 
 O plugin não substitui cursos, atividades, conclusão nativa, notas ou competências. Ele organiza esses elementos em uma jornada maior, permitindo que o estudante entre pela trilha e avance por etapas que podem apontar para cursos Moodle, URLs, HTML, H5P e outros conteúdos adicionados por subplugins.
 
-## Instalação
-
-Copie a pasta `kopere_trail` para `local/kopere_trail` no Moodle e acesse a administração para instalar.
-
 ## Conceito
 
 No Moodle tradicional, o estudante entra em um curso e percorre as atividades daquele curso.
