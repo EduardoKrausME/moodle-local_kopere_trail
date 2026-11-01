@@ -131,11 +131,6 @@ class provider implements
             $userlist->add_from_sql("userid", "SELECT DISTINCT userid FROM {{$table}}", []);
         }
 
-        /**
-         * Property userlist.
-         *
-         * @var mixed
-         */
         $userlist->add_from_sql(
             "userid",
             "SELECT DISTINCT instanceid AS userid
